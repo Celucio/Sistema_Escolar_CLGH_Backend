@@ -17,7 +17,7 @@ app.use(function (req, res, next) {
   next();
 });
 
-// Cargar automáticamente todas las rutas en el directorio 'routes'
+
 const routesDirectory = path.join(__dirname, 'src', 'routes');
 const routeFiles = fs.readdirSync(routesDirectory);
 
