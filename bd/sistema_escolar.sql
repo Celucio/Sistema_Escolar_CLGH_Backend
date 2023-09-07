@@ -1,68 +1,68 @@
 CREATE DATABASE sistema_escolar;
 USE sistema_escolar;
 -- Crear la tabla Estudiante
-CREATE TABLE Estudiante (
-    ID_estudiante INT AUTO_INCREMENT PRIMARY KEY,
-    Nombre VARCHAR(255),
-    Apellido VARCHAR(255),
-    Cedula VARCHAR(20),
-    Fecha_de_nacimiento DATE,
-    Direccion VARCHAR(255),
-    Correo VARCHAR(255),
-    Celular VARCHAR(20)
+CREATE TABLE estudiante (
+    id VARCHAR(100) PRIMARY KEY,
+    nombre VARCHAR(255),
+    apellido VARCHAR(255),
+    cedula VARCHAR(20),
+    fecha_de_nacimiento DATE,
+    direccion VARCHAR(255),
+    correo VARCHAR(255),
+    celular VARCHAR(20)
 );
 
 -- Crear la tabla Administrador
-CREATE TABLE Administrador (
-    Usuario VARCHAR(255) PRIMARY KEY,
-    Contraseña VARCHAR(255)
+CREATE TABLE administrador (
+    usuario VARCHAR(255) PRIMARY KEY,
+    contraseña VARCHAR(255)
 );
 
 -- Crear la tabla Docente
-CREATE TABLE Docente (
-    ID_docente INT AUTO_INCREMENT PRIMARY KEY,
-    Nombre VARCHAR(255),
-    Apellido VARCHAR(255),
-    Fecha_de_nacimiento DATE,
-    Direccion VARCHAR(255),
-    Correo VARCHAR(255),
-    Celular VARCHAR(20),
-    Especializacion VARCHAR(255)
+CREATE TABLE docente (
+    id VARCHAR(100) PRIMARY KEY,
+    nombre VARCHAR(255),
+    apellido VARCHAR(255),
+    fecha_de_nacimiento DATE,
+    direccion VARCHAR(255),
+    correo VARCHAR(255),
+    celular VARCHAR(20),
+    especializacion VARCHAR(255)
 );
 
 -- Crear la tabla Asignatura
-CREATE TABLE Asignatura (
-    NRC INT PRIMARY KEY,
-    Nombre_Materia VARCHAR(255)
+CREATE TABLE asignatura (
+    nrc INT PRIMARY KEY,
+    nombre_materia VARCHAR(255)
 );
 -- Crear la tabla Periodo
-CREATE TABLE Periodo (
-    ID_Periodo INT AUTO_INCREMENT PRIMARY KEY,
-    Nombre_del_Periodo VARCHAR(255),
-    Fecha_Inicio DATE,
-    Fecha_Fin DATE
+CREATE TABLE periodo (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre_periodo VARCHAR(255),
+    fecha_inicio DATE,
+    fecha_fin DATE
 );
 
 -- Crear la tabla Calificacion
-CREATE TABLE Calificacion (
-    ID_Calificacion INT AUTO_INCREMENT PRIMARY KEY,
-    ID_Matricula INT,
-    Valor_de_la_Nota DECIMAL(5, 2),
-    FOREIGN KEY (ID_Matricula) REFERENCES Matricula(ID_Matricula)
+CREATE TABLE calificacion (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_matricula INT,
+    valor_nota DECIMAL(5, 2),
+    FOREIGN KEY (id_matricula) REFERENCES matricula(id)
 );
 
 -- Crear la tabla Matricula
-CREATE TABLE Matricula (
-    ID_Matricula INT AUTO_INCREMENT PRIMARY KEY,
-    ID_Usuario INT,
-    ID_docente INT,
-    NRC INT,
-    ID_Periodo INT,
-    Estado ENUM('ACTIVO', 'INACTIVO'),
-    FOREIGN KEY (ID_Usuario) REFERENCES Estudiante(ID_estudiante),
-    FOREIGN KEY (NRC) REFERENCES Asignatura(NRC),
-    FOREIGN KEY (ID_Periodo) REFERENCES Periodo(ID_Periodo),
-    FOREIGN KEY (ID_docente) REFERENCES Docente(ID_docente)
+CREATE TABLE matricula (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_estudiante VARCHAR(100),
+    id_docente VARCHAR(100),
+    nrc INT,
+    id_periodo INT,
+    estado ENUM('ACTIVO', 'INACTIVO'),
+    FOREIGN KEY (id_estudiante) REFERENCES estudiante(id),
+    FOREIGN KEY (nrc) REFERENCES asignatura(nrc),
+    FOREIGN KEY (id_periodo) REFERENCES periodo(id),
+    FOREIGN KEY (id_docente) REFERENCES docente(id)
 );
 
 
