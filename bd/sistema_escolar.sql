@@ -43,13 +43,6 @@ CREATE TABLE periodo (
     fecha_fin DATE
 );
 
--- Crear la tabla Calificacion
-CREATE TABLE calificacion (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    id_matricula INT,
-    valor_nota DECIMAL(5, 2),
-    FOREIGN KEY (id_matricula) REFERENCES matricula(id)
-);
 
 -- Crear la tabla Matricula
 CREATE TABLE matricula (
@@ -63,6 +56,14 @@ CREATE TABLE matricula (
     FOREIGN KEY (nrc) REFERENCES asignatura(nrc),
     FOREIGN KEY (id_periodo) REFERENCES periodo(id),
     FOREIGN KEY (id_docente) REFERENCES docente(id)
+);
+
+-- Crear la tabla Calificacion
+CREATE TABLE calificacion (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_matricula INT,
+    valor_nota DECIMAL(5, 2),
+    FOREIGN KEY (id_matricula) REFERENCES matricula(id)
 );
 
 
