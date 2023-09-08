@@ -23,6 +23,7 @@ CREATE TABLE docente (
     id VARCHAR(100) PRIMARY KEY,
     nombre VARCHAR(255),
     apellido VARCHAR(255),
+    cedula VARCHAR(20),
     fecha_de_nacimiento DATE,
     direccion VARCHAR(255),
     correo VARCHAR(255),

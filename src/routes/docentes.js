@@ -20,4 +20,68 @@ router.get('/docentes', (req, res) => {
     });
 });
 
+//Obtener docentes por ID
+router.get('/docente/:id', (req, res) => {
+    getConnection(function (err, conn) {
+        const { id } = req.params;
+        if (err) {
+            return res.sendStatus(400);
+        }
+        conn.query('SELECT * FROM docente WHERE id = ?', [id], function (err, rows) {
+            if (err) {
+                conn.release();
+                return res.sendStatus(400, 'No se puede conectar con la base de datos');
+            }
+            res.send(rows);
+            conn.release();
+        });
+    });
+});
+
+//Insertar un docente
+router.post('/docente/', async (req, res) => {
+    const fechaNacimiento = new Date(req.body.fecha_de_nacimiento).toISOString().slice(0, 19).replace('T', ' ');
+
+    const getLastIdQuery = "SELECT MAX(id) AS lastId FROM docente";
+    getConnection(function (err, conn) {
+        if (err) {
+            console.log("No se puede conectar con la base de datos" + err);
+        }
+        conn.query(getLastIdQuery, function (err, result) {
+            if (!err) {
+                let lastId = 'DCT-1'; 
+                if (result && result[0] && result[0].lastId) {
+                    lastId = result[0].lastId;
+                    let number = parseInt(lastId.split('-')[1]) + 1;
+                    lastId = 'DCT-' + number;
+                }
+                const data = {
+                    id: lastId,
+                    nombre: req.body.nombre,
+                    apellido: req.body.apellido,
+                    cedula: req.body.cedula,
+                    fechaNacimiento: fechaNacimiento,
+                    direccion: req.body.direccion,
+                    correo: req.body.correo,
+                    celular: req.body.celular,
+                    especializacion: req.body.especializacion
+                }
+                const query = "INSERT INTO docente (id, nombre, apellido, cedula, fecha_de_nacimiento, direccion, correo, celular, especializacion) VALUES(\'" + data.id + "\', \'" + data.nombre + "\', \'" + data.apellido + "\', \'" + data.cedula + "\', \'" + data.fechaNacimiento + "\', \'" + data.direccion + "\', \'" + data.correo + "\', \'" + data.celular + "\', \'" + data.especializacion + "\')";
+
+                conn.query(query, function (err, result) {
+                    if (!err) {
+                        res.json({ status: 'Registro exitoso' });
+                    } else {
+                        console.log(err);
+                    }
+                    conn.release();
+                });
+            } else {
+                console.log(err);
+                conn.release();
+            }
+        });
+    });
+});
+
 module.exports = router;

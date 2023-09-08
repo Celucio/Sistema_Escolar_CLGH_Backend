@@ -38,12 +38,10 @@ router.get('/estudiante/:ci', (req, res) => {
     });
 });
 
-//Insertar un estudiante
+//Ingresar un estudiante
 router.post('/estudiante/', async (req, res) => {
-    //Formato de la fecha
     const fechaNacimiento = new Date(req.body.fecha_de_nacimiento).toISOString().slice(0, 19).replace('T', ' ');
 
-    // Obtener el último ID de la base de datos
     const getLastIdQuery = "SELECT MAX(id) AS lastId FROM estudiante";
     getConnection(function (err, conn) {
         if (err) {
@@ -51,11 +49,14 @@ router.post('/estudiante/', async (req, res) => {
         }
         conn.query(getLastIdQuery, function (err, result) {
             if (!err) {
-                let lastId = result[0].lastId;
-                // Obtener el número incremental
-                let number = parseInt(lastId.split('-')[1]) + 1;
+                let lastId = 'EST-1'; 
+                if (result && result[0] && result[0].lastId) {
+                    lastId = result[0].lastId;
+                    let number = parseInt(lastId.split('-')[1]) + 1;
+                    lastId = 'EST-' + number;
+                }
                 const data = {
-                    id: 'EST-' + number,
+                    id: lastId,
                     nombre: req.body.nombre,
                     apellido: req.body.apellido,
                     cedula: req.body.cedula,
@@ -81,6 +82,7 @@ router.post('/estudiante/', async (req, res) => {
         });
     });
 });
+
 
 //Actualizar un estudiante por cedula
 router.put('/estudiante/:ci', (req, res) => {
