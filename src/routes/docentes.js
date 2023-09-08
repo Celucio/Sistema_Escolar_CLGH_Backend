@@ -85,5 +85,21 @@ router.post('/docente/', async (req, res) => {
 });
 
 //Eliminar un docente
+router.delete('/docente/:ci', (req, res) => {
+    getConnection(function (err, conn) {
+        const { ci } = req.params;
+        if (err) {
+            return res.sendStatus(400);
+        }
+        conn.query('DELETE FROM docente WHERE cedula = ?', [ci], function (err, rows) {
+            if (err) {
+                conn.release();
+                return res.sendStatus(400, 'No se puede conectar a la base de datos');
+            }
+            res.send(rows);
+            conn.release();
+        });
+    });
+});
 
 module.exports = router;
