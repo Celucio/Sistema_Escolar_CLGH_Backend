@@ -84,4 +84,6 @@ router.post('/docente/', async (req, res) => {
     });
 });
 
+//Eliminar un docente
+
 module.exports = router;
