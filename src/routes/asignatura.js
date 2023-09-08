@@ -38,6 +38,22 @@ router.get('/asignatura/:nrc', (req, res) => {
     });
 });
 
-
+//Eliminar una asignatura
+router.delete('/asignatura/:nrc', (req, res) => {
+    getConnection(function (err, conn) {
+        const { nrc } = req.params;
+        if (err) {
+            return res.sendStatus(400);
+        }
+        conn.query('DELETE FROM asignatura WHERE nrc = ?', [nrc], function (err, rows) {
+            if (err) {
+                conn.release();
+                return res.sendStatus(400, 'No se puede conectar a la base de datos');
+            }
+            res.send(rows);
+            conn.release();
+        });
+    });
+});
 
 module.exports = router;
