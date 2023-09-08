@@ -38,6 +38,36 @@ router.get('/asignatura/:nrc', (req, res) => {
     });
 });
 
+//Insertar una asignatura
+router.post('/asignatura/', async (req, res) => {
+
+    getConnection(function (err, conn) {
+        if (err) {
+            console.log("No se puede conectar con la base de datos" + err);
+        }
+        if (!err) {
+            const data = {
+                nrc: req.body.nrc,
+                nombre_materia: req.body.nombre_materia,
+            }
+            const query = "INSERT INTO asignatura (nrc, nombre_materia) VALUES(\'" + data.nrc + "\', \'" + data.nombre_materia + "\')";
+
+            conn.query(query, function (err, result) {
+                if (!err) {
+                    res.json({ status: 'Registro exitoso' });
+                } else {
+                    console.log(err);
+                }
+                conn.release();
+            });
+        } else {
+            console.log(err);
+            conn.release();
+        }
+
+    });
+});
+
 //Eliminar una asignatura
 router.delete('/asignatura/:nrc', (req, res) => {
     getConnection(function (err, conn) {
