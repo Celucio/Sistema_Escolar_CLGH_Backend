@@ -84,4 +84,60 @@ router.post('/docente/', async (req, res) => {
     });
 });
 
+//Actualizar un docente por cedula
+router.put('/docente/:ci', (req, res) => {
+    const { ci } = req.params;
+    const data = {
+        nombre: req.body.nombre,
+        apellido: req.body.apellido,
+        cedula: req.body.cedula,
+        direccion: req.body.direccion,
+        correo: req.body.correo,
+        celular: req.body.celular,
+        especializacion: req.body.especializacion
+    }
+    const query = 'UPDATE docente SET nombre = ?, apellido = ?, direccion = ?, correo = ?, celular = ?, especializacion = ? WHERE cedula = ?';
+
+    getConnection(function (err, conn) {
+        if (err) {
+            console.log('No se puede acceder a la base de datos', err);
+        }
+        conn.query(query, [
+            data.nombre,
+            data.apellido,
+            data.direccion,
+            data.correo,
+            data.celular,
+            data.especializacion,
+            ci
+        ], function (err, result) {
+            if (!err) {
+                res.json({ status: 'El registro se ha actualizado' });
+            } else {
+                console.log(err);
+            }
+
+            conn.release();
+        })
+    })
+})
+
+//Eliminar un docente
+router.delete('/docente/:ci', (req, res) => {
+    getConnection(function (err, conn) {
+        const { ci } = req.params;
+        if (err) {
+            return res.sendStatus(400);
+        }
+        conn.query('DELETE FROM docente WHERE cedula = ?', [ci], function (err, rows) {
+            if (err) {
+                conn.release();
+                return res.sendStatus(400, 'No se puede conectar a la base de datos');
+            }
+            res.send(rows);
+            conn.release();
+        });
+    });
+});
+
 module.exports = router;
