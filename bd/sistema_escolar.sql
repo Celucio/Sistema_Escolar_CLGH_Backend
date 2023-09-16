@@ -33,7 +33,7 @@ CREATE TABLE docente (
 
 -- Crear la tabla Asignatura
 CREATE TABLE asignatura (
-    nrc INT PRIMARY KEY,
+    nrc VARCHAR(100) PRIMARY KEY,
     nombre_materia VARCHAR(255)
 );
 -- Crear la tabla Periodo
@@ -50,7 +50,7 @@ CREATE TABLE matricula (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_estudiante VARCHAR(100),
     id_docente VARCHAR(100),
-    nrc INT,
+    nrc VARCHAR(200),
     id_periodo INT,
     estado ENUM('ACTIVO', 'INACTIVO'),
     FOREIGN KEY (id_estudiante) REFERENCES estudiante(id),
@@ -67,4 +67,4 @@ CREATE TABLE calificacion (
     FOREIGN KEY (id_matricula) REFERENCES matricula(id)
 );
 
-
+ALTER TABLE asignatura ADD CONSTRAINT unique_id UNIQUE (nrc);

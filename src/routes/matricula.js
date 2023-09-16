@@ -2,14 +2,14 @@ const express = require('express');
 const router = express.Router();
 var getConnection = require('../../conexion/connection');
 
-//consultar todas las asignaturas de la tabla
-router.get('/asignaturas', (req, res) => {
+//Consultar todas las matriculas
+router.get('/matriculas', (req, res) => {
     getConnection(function (err, conn) {
 
         if (err) {
             return res.sendStatus(400);
         }
-        conn.query('SELECT * FROM Asignatura', function (err, rows) {
+        conn.query('SELECT * FROM matricula', function (err, rows) {
             if (err) {
                 conn.release();
                 return res.sendStatus(400, 'No se puede conectar a la base de datos');
@@ -20,14 +20,14 @@ router.get('/asignaturas', (req, res) => {
     });
 });
 
-//Obtener asignaturas por NRC
-router.get('/asignatura/:nrc', (req, res) => {
+//Consultar una matricula por ID
+router.get('/matricula/:id', (req, res) => {
     getConnection(function (err, conn) {
-        const { nrc } = req.params;
+        const { id } = req.params;
         if (err) {
             return res.sendStatus(400);
         }
-        conn.query('SELECT * FROM asignatura WHERE nrc = ?', [nrc], function (err, rows) {
+        conn.query('SELECT * FROM matricula WHERE id = ?', [id], function (err, rows) {
             if (err) {
                 conn.release();
                 return res.sendStatus(400, 'No se puede conectar con la base de datos');
@@ -38,23 +38,24 @@ router.get('/asignatura/:nrc', (req, res) => {
     });
 });
 
-//Insertar una asignatura
-router.post('/asignatura/', async (req, res) => {
+//Insertar una matricula
+router.post('/matricula/', async (req, res) => {
     
-    const id = Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000;
-
-
     getConnection(function (err, conn) {
         if (err) {
             console.log("No se puede conectar con la base de datos" + err);
         }
         if (!err) {
             const data = {
-                nrc: id,
-                nombre_materia: req.body.nombre_materia,
+                id: req.body.id,
+                id_estudiante: req.body.id_estudiante,
+                id_docente: req.body.id_docente,
+                nrc: req.body.nrc,
+                id_periodo: req.body.id_periodo,
+                estado: req.body.estado
             }
-            const query = "INSERT INTO asignatura (nrc, nombre_materia) VALUES(\'" + data.nrc + "\', \'" + data.nombre_materia + "\')";
-
+            const query = "INSERT INTO matricula (id,id_estudiante, id_docente, nrc, id_periodo, estado) VALUES(\'" + data.id + "\', \'" + data.id_estudiante + "\', \'" + data.id_docente + "\', \'" + data.nrc + "\', \'" + data.id_periodo + "\', \'" + data.estado + "\')";
+    
             conn.query(query, function (err, result) {
                 if (!err) {
                     res.json({ status: 'Registro exitoso' });
@@ -67,26 +68,11 @@ router.post('/asignatura/', async (req, res) => {
             console.log(err);
             conn.release();
         }
-
+    
     });
 });
 
-//Eliminar una asignatura
-router.delete('/asignatura/:nrc', (req, res) => {
-    getConnection(function (err, conn) {
-        const { nrc } = req.params;
-        if (err) {
-            return res.sendStatus(400);
-        }
-        conn.query('DELETE FROM asignatura WHERE nrc = ?', [nrc], function (err, rows) {
-            if (err) {
-                conn.release();
-                return res.sendStatus(400, 'No se puede conectar a la base de datos');
-            }
-            res.send(rows);
-            conn.release();
-        });
-    });
-});
+//Actualizar una matricula
+
 
 module.exports = router;

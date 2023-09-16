@@ -85,8 +85,8 @@ router.post('/docente/', async (req, res) => {
 });
 
 //Actualizar un docente por cedula
-router.put('/docente/:ci', (req, res) => {
-    const { ci } = req.params;
+router.put('/docente/:id', (req, res) => {
+    const { id } = req.params;
     const data = {
         nombre: req.body.nombre,
         apellido: req.body.apellido,
@@ -96,7 +96,7 @@ router.put('/docente/:ci', (req, res) => {
         celular: req.body.celular,
         especializacion: req.body.especializacion
     }
-    const query = 'UPDATE docente SET nombre = ?, apellido = ?, direccion = ?, correo = ?, celular = ?, especializacion = ? WHERE cedula = ?';
+    const query = 'UPDATE docente SET nombre = ?, apellido = ?, direccion = ?, correo = ?, celular = ?, especializacion = ? WHERE id = ?';
 
     getConnection(function (err, conn) {
         if (err) {
@@ -109,7 +109,7 @@ router.put('/docente/:ci', (req, res) => {
             data.correo,
             data.celular,
             data.especializacion,
-            ci
+            id
         ], function (err, result) {
             if (!err) {
                 res.json({ status: 'El registro se ha actualizado' });
@@ -123,13 +123,13 @@ router.put('/docente/:ci', (req, res) => {
 })
 
 //Eliminar un docente
-router.delete('/docente/:ci', (req, res) => {
+router.delete('/docente/:id', (req, res) => {
     getConnection(function (err, conn) {
-        const { ci } = req.params;
+        const { id } = req.params;
         if (err) {
             return res.sendStatus(400);
         }
-        conn.query('DELETE FROM docente WHERE cedula = ?', [ci], function (err, rows) {
+        conn.query('DELETE FROM docente WHERE id = ?', [id], function (err, rows) {
             if (err) {
                 conn.release();
                 return res.sendStatus(400, 'No se puede conectar a la base de datos');
