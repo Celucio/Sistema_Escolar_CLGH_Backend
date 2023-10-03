@@ -9,7 +9,7 @@ router.get('/estudiantes', (req, res) => {
         if (err) {
             return res.sendStatus(400);
         }
-        conn.query('SELECT * FROM Estudiante', function (err, rows) {
+        conn.query('SELECT * FROM estudiante', function (err, rows) {
             if (err) {
                 conn.release();
                 return res.sendStatus(400, 'No se puede conectar a la base de datos');

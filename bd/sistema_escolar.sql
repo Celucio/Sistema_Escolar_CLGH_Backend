@@ -34,7 +34,9 @@ CREATE TABLE docente (
 -- Crear la tabla Asignatura
 CREATE TABLE asignatura (
     nrc VARCHAR(100) PRIMARY KEY,
-    nombre_materia VARCHAR(255)
+    nombre_materia VARCHAR(255),
+    id_docente VARCHAR(100),
+    FOREIGN KEY (id_docente) REFERENCES docente(id)
 );
 -- Crear la tabla Periodo
 CREATE TABLE periodo (
@@ -48,23 +50,21 @@ CREATE TABLE periodo (
 -- Crear la tabla Matricula
 CREATE TABLE matricula (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    id_estudiante VARCHAR(100),
-    id_docente VARCHAR(100),
     nrc VARCHAR(200),
     id_periodo INT,
     estado ENUM('ACTIVO', 'INACTIVO'),
-    FOREIGN KEY (id_estudiante) REFERENCES estudiante(id),
     FOREIGN KEY (nrc) REFERENCES asignatura(nrc),
-    FOREIGN KEY (id_periodo) REFERENCES periodo(id),
-    FOREIGN KEY (id_docente) REFERENCES docente(id)
+    FOREIGN KEY (id_periodo) REFERENCES periodo(id)
 );
 
 -- Crear la tabla Calificacion
 CREATE TABLE calificacion (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    id_matricula INT,
+    id_estudiante VARCHAR(100),
     valor_nota DECIMAL(5, 2),
-    FOREIGN KEY (id_matricula) REFERENCES matricula(id)
+    nrc VARCHAR(200),
+    FOREIGN KEY (id_estudiante) REFERENCES estudiante(id),
+    FOREIGN KEY (nrc) REFERENCES asignatura(nrc)
 );
 
 ALTER TABLE asignatura ADD CONSTRAINT unique_id UNIQUE (nrc);

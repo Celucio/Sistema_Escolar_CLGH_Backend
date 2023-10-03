@@ -9,7 +9,8 @@ router.get('/asignaturas', (req, res) => {
         if (err) {
             return res.sendStatus(400);
         }
-        conn.query('SELECT * FROM Asignatura', function (err, rows) {
+        //SELECT a.nrc, a.nombre_materia, d.id, d.nombre, d.apellido FROM asignatura AS a INNER JOIN docente AS d ON d.id = a.id_docente
+        conn.query('SELECT * FROM asignatura', function (err, rows) {
             if (err) {
                 conn.release();
                 return res.sendStatus(400, 'No se puede conectar a la base de datos');
@@ -52,8 +53,9 @@ router.post('/asignatura/', async (req, res) => {
             const data = {
                 nrc: id,
                 nombre_materia: req.body.nombre_materia,
+                id_docente: req.body.id_docente
             }
-            const query = "INSERT INTO asignatura (nrc, nombre_materia) VALUES(\'" + data.nrc + "\', \'" + data.nombre_materia + "\')";
+            const query = "INSERT INTO asignatura (nrc, nombre_materia, id_docente) VALUES(\'" + data.nrc + "\', \'" + data.nombre_materia + "\' , \'" + data.id_docente + "\')";
 
             conn.query(query, function (err, result) {
                 if (!err) {
