@@ -57,14 +57,39 @@ CREATE TABLE matricula (
     FOREIGN KEY (id_periodo) REFERENCES periodo(id)
 );
 
+CREATE TABLE categorias (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre_categoria VARCHAR(255)
+);
+
+CREATE TABLE parciales (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre_parcial VARCHAR(255)
+);
+
+CREATE TABLE actividades (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre_actividad VARCHAR(255),
+    fecha_inicio DATE,
+    fecha_cierre DATE,
+    parcial_id INT,
+    categoria_id INT,
+    FOREIGN KEY (parcial_id) REFERENCES parciales(id),
+    FOREIGN KEY (categoria_id) REFERENCES categorias(id)
+);
+
+
 -- Crear la tabla Calificacion
 CREATE TABLE calificacion (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_estudiante VARCHAR(100),
     valor_nota DECIMAL(5, 2),
     nrc VARCHAR(200),
+    actividad_id INT,
     FOREIGN KEY (id_estudiante) REFERENCES estudiante(id),
-    FOREIGN KEY (nrc) REFERENCES asignatura(nrc)
+    FOREIGN KEY (nrc) REFERENCES asignatura(nrc),
+    FOREIGN KEY (actividad_id) REFERENCES actividades(id)
 );
 
 ALTER TABLE asignatura ADD CONSTRAINT unique_id UNIQUE (nrc);
+
