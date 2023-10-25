@@ -9,7 +9,7 @@ router.get('/estudiantes', (req, res) => {
         if (err) {
             return res.sendStatus(400);
         }
-        conn.query('SELECT * FROM estudiante', function (err, rows) {
+        conn.query('SELECT p.id, p.nombre, p.apellido, p.cedula, p.fecha_de_nacimiento, p.direccion, p.correo, p.celular, e.tipo_sangre FROM persona p INNER JOIN estudiante e ON p.id = e.id;', function (err, rows) {
             if (err) {
                 conn.release();
                 return res.sendStatus(400, 'No se puede conectar a la base de datos');
