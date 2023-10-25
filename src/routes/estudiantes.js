@@ -38,47 +38,88 @@ router.get('/estudiante/:ci', (req, res) => {
     });
 });
 
-//Ingresar un estudiante
-router.post('/estudiante/', async (req, res) => {
-    const fechaNacimiento = new Date(req.body.fecha_de_nacimiento).toISOString().slice(0, 19).replace('T', ' ');
 
-    const getLastIdQuery = "SELECT MAX(id) AS lastId FROM estudiante";
+router.post('/estudiante/', async (req, res) => {
+    const { nombre, apellido, cedula, fecha_de_nacimiento, direccion, correo, celular, tipo_sangre } = req.body;
+
+    const getLastIdQuery = "SELECT MAX(id) AS lastId FROM persona";
+
     getConnection(function (err, conn) {
         if (err) {
             console.log("No se puede conectar con la base de datos" + err);
+            return;
         }
-        conn.query(getLastIdQuery, function (err, result) {
-            if (!err) {
-                let lastId = 'EST-1'; 
-                if (result && result[0] && result[0].lastId) {
-                    lastId = result[0].lastId;
-                    let number = parseInt(lastId.split('-')[1]) + 1;
-                    lastId = 'EST-' + number;
-                }
-                const data = {
-                    id: lastId,
-                    nombre: req.body.nombre,
-                    apellido: req.body.apellido,
-                    cedula: req.body.cedula,
-                    fechaNacimiento: fechaNacimiento,
-                    direccion: req.body.direccion,
-                    correo: req.body.correo,
-                    celular: req.body.celular
-                }
-                const query = "INSERT INTO estudiante (id, nombre, apellido, cedula, fecha_de_nacimiento, direccion, correo, celular) VALUES(\'" + data.id + "\', \'" + data.nombre + "\', \'" + data.apellido + "\', \'" + data.cedula + "\', \'" + data.fechaNacimiento + "\', \'" + data.direccion + "\', \'" + data.correo + "\', \'" + data.celular + "\')";
 
-                conn.query(query, function (err, result) {
-                    if (!err) {
-                        res.json({ status: 'Registro exitoso' });
-                    } else {
-                        console.log(err);
-                    }
-                    conn.release();
-                });
-            } else {
+        conn.query(getLastIdQuery, function (err, result) {
+            if (err) {
                 console.log(err);
                 conn.release();
+                return;
             }
+
+            let lastId = 'EST-1';
+            if (result && result[0] && result[0].lastId) {
+                lastId = result[0].lastId;
+                let number = parseInt(lastId.split('-')[1]) + 1;
+                lastId = 'EST-' + number;
+            }
+
+            const personaData = {
+                id: lastId,
+                nombre,
+                apellido,
+                cedula,
+                fecha_de_nacimiento,
+                direccion,
+                correo,
+                celular
+            };
+
+            const estudianteData = {
+                id: lastId,
+                tipo_sangre
+            };
+
+            // Iniciar una transacción
+            conn.beginTransaction(function (err) {
+                if (err) {
+                    console.log(err);
+                    conn.release();
+                    return;
+                }
+
+                // Insertar datos en la tabla 'persona'
+                conn.query('INSERT INTO persona SET ?', personaData, function (err) {
+                    if (err) {
+                        console.log(err);
+                        // Deshacer la transacción en caso de error
+                        conn.rollback(function () {
+                            conn.release();
+                        });
+                    } else {
+                        // Insertar datos en la tabla 'estudiante'
+                        conn.query('INSERT INTO estudiante SET ?', estudianteData, function (err) {
+                            if (err) {
+                                console.log(err);
+                                // Deshacer la transacción en caso de error
+                                conn.rollback(function () {
+                                    conn.release();
+                                });
+                            } else {
+                                // Confirmar la transacción
+                                conn.commit(function (err) {
+                                    if (err) {
+                                        console.log(err);
+                                    } else {
+                                        res.json({ status: 'Registro exitoso' });
+                                    }
+                                    conn.release();
+                                });
+                            }
+                        });
+                    }
+                });
+            });
         });
     });
 });

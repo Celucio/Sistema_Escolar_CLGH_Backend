@@ -4,7 +4,7 @@ var pool = mysql.createPool({
     host        : 'localhost',
     user        : 'root',
     password    : '',
-    database    : 'sistema_escolar'
+    database    : 'sistema_escolar_v2'
 });
 
 var getConnection = function(cb){

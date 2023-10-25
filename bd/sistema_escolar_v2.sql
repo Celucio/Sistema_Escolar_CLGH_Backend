@@ -6,22 +6,6 @@ CREATE TABLE rol(
     nombre_rol VARCHAR(100)
 );
 
-
-CREATE TABLE estudiante(
-    id VARCHAR(100) PRIMARY KEY,
-    tipo_sangre VARCHAR(50)
-);
-
-CREATE TABLE docente(
-    id VARCHAR(100) PRIMARY KEY,
-    especializacion VARCHAR(100)
-);
-
-CREATE TABLE administrador(
-    id VARCHAR(100) PRIMARY KEY,
-    tipo_administrador VARCHAR(100)
-);
-
 CREATE TABLE persona(
     id VARCHAR(100) PRIMARY KEY,
     nombre VARCHAR(255),
@@ -30,14 +14,27 @@ CREATE TABLE persona(
     fecha_de_nacimiento DATE,
     direccion VARCHAR(255),
     correo VARCHAR(255),
-    celular VARCHAR(20),
-    id_estudiante VARCHAR(100),
-    id_docente VARCHAR(100),
-    id_administrador VARCHAR(100),
-    FOREIGN KEY (id_estudiante) REFERENCES estudiante(id),
-    FOREIGN KEY (id_docente) REFERENCES docente(id),
-    FOREIGN KEY (id_administrador) REFERENCES administrador(id)
+    celular VARCHAR(20)
 );
+
+CREATE TABLE estudiante(
+    id VARCHAR(100) PRIMARY KEY,
+    tipo_sangre VARCHAR(50),
+    FOREIGN KEY (id) REFERENCES persona(id)
+);
+
+CREATE TABLE docente(
+    id VARCHAR(100) PRIMARY KEY,
+    especializacion VARCHAR(100),
+     FOREIGN KEY (id) REFERENCES persona(id)
+);
+
+CREATE TABLE administrador(
+    id VARCHAR(100) PRIMARY KEY,
+    tipo_administrador VARCHAR(100),
+    FOREIGN KEY (id) REFERENCES persona(id)
+);
+
 
 CREATE TABLE persona_rol(
     id INT PRIMARY KEY AUTO_INCREMENT, 
@@ -88,3 +85,4 @@ CREATE TABLE matricula (
     FOREIGN KEY (id_asignatura) REFERENCES asignatura(id),
     FOREIGN KEY (id_persona) REFERENCES persona(id)
 );
+
