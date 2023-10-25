@@ -87,7 +87,7 @@ router.get('/docente/:id', (req, res) => {
 router.post('/docente/', async (req, res) => {
     const { nombre, apellido, cedula, fecha_de_nacimiento, direccion, correo, celular, especializacion } = req.body;
 
-    const getLastIdQuery = "SELECT MAX(id) AS lastId FROM persona";
+    const getLastIdQuery = "SELECT MAX(id) AS lastId FROM docente";
 
     getConnection(function (err, conn) {
         if (err) {
