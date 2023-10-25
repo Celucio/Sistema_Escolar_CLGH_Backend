@@ -27,7 +27,7 @@ router.get('/estudiante/:ci', (req, res) => {
         if (err) {
             return res.sendStatus(400);
         }
-        conn.query('SELECT p.id, p.nombre, p.apellido, p.fecha_de_nacimiento, p.direccion, p.correo, p.celular,e.tipo_sangre FROM persona p JOIN estudiante e ON p.id = e.id WHERE p.cedula = ?;', [ci], function (err, rows) {
+        conn.query('SELECT p.nombre, p.apellido, p.fecha_de_nacimiento, p.direccion, p.correo, p.celular,e.tipo_sangre FROM persona p JOIN estudiante e ON p.id = e.id WHERE p.cedula = ?;', [ci], function (err, rows) {
             if (err) {
                 conn.release();
                 return res.sendStatus(400, 'No se puede conectar con la base de datos');
