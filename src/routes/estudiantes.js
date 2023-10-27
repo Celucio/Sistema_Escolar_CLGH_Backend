@@ -38,7 +38,7 @@ router.get('/estudiante/:ci', (req, res) => {
     });
 });
 
-
+//Insertar un nuevo registro estudiante
 router.post('/estudiante/', async (req, res) => {
     const { nombre, apellido, cedula, fecha_de_nacimiento, direccion, correo, celular, tipo_sangre } = req.body;
 
@@ -79,34 +79,26 @@ router.post('/estudiante/', async (req, res) => {
                 id: lastId,
                 tipo_sangre
             };
-
-            // Iniciar una transacción
             conn.beginTransaction(function (err) {
                 if (err) {
                     console.log(err);
                     conn.release();
                     return;
                 }
-
-                // Insertar datos en la tabla 'persona'
                 conn.query('INSERT INTO persona SET ?', personaData, function (err) {
                     if (err) {
                         console.log(err);
-                        // Deshacer la transacción en caso de error
                         conn.rollback(function () {
                             conn.release();
                         });
                     } else {
-                        // Insertar datos en la tabla 'estudiante'
                         conn.query('INSERT INTO estudiante SET ?', estudianteData, function (err) {
                             if (err) {
                                 console.log(err);
-                                // Deshacer la transacción en caso de error
                                 conn.rollback(function () {
                                     conn.release();
                                 });
                             } else {
-                                // Confirmar la transacción
                                 conn.commit(function (err) {
                                     if (err) {
                                         console.log(err);
@@ -125,56 +117,71 @@ router.post('/estudiante/', async (req, res) => {
 });
 
 
-//Actualizar un estudiante por cedula
-router.put('/estudiante/:ci', (req, res) => {
-    const { ci } = req.params;
+//Actualizar un estudiante por id
+router.put('/estudiante/:id', (req, res) => {
+    const { id } = req.params;
     const data = {
         nombre: req.body.nombre,
         apellido: req.body.apellido,
-        cedula: req.body.cedula,
         direccion: req.body.direccion,
         correo: req.body.correo,
-        celular: req.body.celular
-    }
-    const query = 'UPDATE estudiante SET nombre = ?, apellido = ?, direccion = ?, correo = ?, celular = ? WHERE cedula = ?';
+        celular: req.body.celular,
+        tipo_sangre: req.body.tipo_sangre
+    };
 
     getConnection(function (err, conn) {
         if (err) {
             console.log('No se puede acceder a la base de datos', err);
+            return;
         }
-        conn.query(query, [
-            data.nombre,
-            data.apellido,
-            data.direccion,
-            data.correo,
-            data.celular,
-            ci
-        ], function (err, result) {
-            if (!err) {
-                res.json({ status: 'El registro se ha actualizado' });
-            } else {
-                console.log(err);
-            }
 
-            conn.release();
-        })
-    })
-})
-
-// Eliminar estudiante por ID
-router.delete('/estudiante/:ci', (req, res) => {
-    getConnection(function (err, conn) {
-        const { ci } = req.params;
-        if (err) {
-            return res.sendStatus(400);
-        }
-        conn.query('DELETE FROM estudiante WHERE cedula = ?', [ci], function (err, rows) {
+        // Iniciar una transacción
+        conn.beginTransaction(function (err) {
             if (err) {
+                console.log('Error al iniciar la transacción', err);
                 conn.release();
-                return res.sendStatus(400, 'No se puede conectar a la base de datos');
+                return;
             }
-            res.send(rows);
-            conn.release();
+
+            // Actualizar la tabla 'persona'
+            conn.query('UPDATE persona SET nombre = ?, apellido = ?, direccion = ?, correo = ?, celular = ? WHERE id = ?', [
+                data.nombre,
+                data.apellido,
+                data.direccion,
+                data.correo,
+                data.celular,
+                id
+            ], function (err) {
+                if (err) {
+                    console.log('Error al actualizar la tabla persona', err);
+                    conn.rollback(function () {
+                        conn.release();
+                    });
+                } else {
+                    // Actualizar la tabla 'docente'
+                    conn.query('UPDATE estudiante SET tipo_sangre = ? WHERE id = ?', [
+                        data.tipo_sangre,
+                        id
+                    ], function (err) {
+                        if (err) {
+                            console.log('Error al actualizar la tabla docente', err);
+                            conn.rollback(function () {
+                                conn.release();
+                            });
+                        } else {
+                            // Confirmar la transacción
+                            conn.commit(function (err) {
+                                if (err) {
+                                    console.log('Error al confirmar la transacción', err);
+                                } else {
+                                    res.json({ status: 'El registro se ha actualizado' });
+                                }
+                                conn.release();
+                            });
+                        };
+                    });
+                };
+            });
         });
     });
 });
