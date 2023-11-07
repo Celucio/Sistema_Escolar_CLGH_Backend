@@ -8,7 +8,7 @@ const router = express.Router();
 router.get('/docentes', docenteController.getAllTeachers);
 
 //Obtener docentes por cedula
-//router.get('/docente/:ci', docenteController.getTeacherByCi);
+router.get('/docente/:ci', docenteController.getTeacherByCi);
 
 //Insertar un nuevo docente
 //router.post('/docente/', docenteController.createTeacher);

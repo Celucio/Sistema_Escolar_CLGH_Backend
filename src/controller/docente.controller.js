@@ -10,6 +10,16 @@ class DocenteController{
         });
     }
 
+    getTeacherByCi(req, res) {
+        const { ci } = req.params;
+        DocenteService.getTeacherByCi(ci, (err, teacher) => {
+            if (err) {
+                return res.status(500).json({ error: 'Error al obtener el docente' });
+            }
+            res.json(teacher);
+        });
+    }
+
 }
 module.exports = new DocenteController()
 
