@@ -7,13 +7,13 @@ const router = express.Router();
 router.get('/estudiantes', estudianteController.getAllStudents);
 
 //Obtener estudiante por cedula
-router.get('/estudiante/:ci', estudianteController.getStudentByCi);
+// router.get('/estudiante/:ci', estudianteController.getStudentByCi);
 
-//Insertar un nuevo registro estudiante
-router.post('/estudiante/', estudianteController.createStudent);
+// //Insertar un nuevo registro estudiante
+// router.post('/estudiante/', estudianteController.createStudent);
 
-//Actualizar un estudiante por id
-router.put('/estudiante/:id', estudianteController.updateStudent);
+// //Actualizar un estudiante por id
+// router.put('/estudiante/:id', estudianteController.updateStudent);
 
 
 module.exports = router;
