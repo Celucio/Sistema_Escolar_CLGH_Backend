@@ -1,12 +1,22 @@
 var EstudianteService = require('../service/estudiante.service')
 
-class EstudianteController{
-    getAllStudents(req,res){
-        EstudianteService.getAllStudents((err,students)=>{
-            if(err){
+class EstudianteController {
+    getAllStudents(req, res) {
+        EstudianteService.getAllStudents((err, students) => {
+            if (err) {
                 return res.status(500).json({ error: 'Error al obtener estudiantes' });
             }
             res.json(students)
+        });
+    }
+
+    getStudentByCi(req, res) {
+        const { ci } = req.params;
+        EstudianteService.getStudentByCi(ci, (err, student) => {
+            if (err) {
+                return res.status(500).json({ error: 'Error al obtener el estudiante' });
+            }
+            res.json(student);
         });
     }
 
