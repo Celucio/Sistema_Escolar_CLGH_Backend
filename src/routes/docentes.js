@@ -1,4 +1,5 @@
 const docenteController = require('../controller/docente.controller');
+
 const express = require('express');
 const router = express.Router();
 
@@ -7,13 +8,13 @@ const router = express.Router();
 router.get('/docentes', docenteController.getAllTeachers);
 
 //Obtener docentes por cedula
-router.get('/docente/:ci', docenteController.getTeacherByCi);
+//router.get('/docente/:ci', docenteController.getTeacherByCi);
 
 //Insertar un nuevo docente
-router.post('/docente/', docenteController.createTeacher);
+//router.post('/docente/', docenteController.createTeacher);
 
 //Actualizar el docente por id
-router.put('/docente/:id',docenteController.updateTeacher);
+//router.put('/docente/:id',docenteController.updateTeacher);
 
 
 module.exports = router;
