@@ -11,7 +11,7 @@ router.get('/docentes', docenteController.getAllTeachers);
 router.get('/docente/:ci', docenteController.getTeacherByCi);
 
 //Insertar un nuevo docente
-//router.post('/docente/', docenteController.createTeacher);
+router.post('/docente/', docenteController.createTeacher);
 
 //Actualizar el docente por id
 //router.put('/docente/:id',docenteController.updateTeacher);
