@@ -19,6 +19,7 @@ class DocenteController{
             res.json(teacher);
         });
     }
+    
     createTeacher(req, res){
         const { id, nombre, apellido, cedula, fecha_de_nacimiento, direccion, correo, celular, tipo_persona } = req.body;
 
@@ -31,7 +32,7 @@ class DocenteController{
             direccion,
             correo,
             celular,
-            tipo_persona
+            tipo_persona: tipo_persona || 'D'
         }
 
         DocenteService.createTeacher(docente, (err, teacher)=>{
