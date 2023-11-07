@@ -20,10 +20,9 @@ class EstudianteController {
         });
     }
     createStudent(req, res){
-        const { id, nombre, apellido, cedula, fecha_de_nacimiento, direccion, correo, celular, tipo_persona } = req.body;
+        const { nombre, apellido, cedula, fecha_de_nacimiento, direccion, correo, celular, tipo_persona } = req.body;
 
         const estudiante = {
-            id,
             nombre,
             apellido,
             cedula,
@@ -31,7 +30,7 @@ class EstudianteController {
             direccion,
             correo,
             celular,
-            tipo_persona
+            tipo_persona: tipo_persona || 'E'
         }
 
         EstudianteService.createStudent(estudiante, (err, student)=>{

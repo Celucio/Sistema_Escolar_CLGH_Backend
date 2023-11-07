@@ -8,7 +8,7 @@ CREATE TABLE rol(
 );
 
 CREATE TABLE persona(
-    id VARCHAR(100) PRIMARY KEY,
+    id INT PRIMARY KEY AUTO_INCREMENT,
     nombre VARCHAR(255),
     apellido VARCHAR(255),
     cedula VARCHAR(20),
