@@ -22,7 +22,7 @@ CREATE TABLE persona(
 CREATE TABLE persona_rol(
     id INT PRIMARY KEY AUTO_INCREMENT, 
     id_rol INT,
-    id_persona VARCHAR(100),
+    id_persona INT,
     estado ENUM('A', 'I'),
     FOREIGN KEY (id_rol) REFERENCES rol(id),
     FOREIGN KEY (id_persona) REFERENCES persona(id)
@@ -53,7 +53,7 @@ CREATE TABLE asignatura (
 
 CREATE TABLE docente_asignatura (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    id_persona VARCHAR(100), -- La ID de la persona docente
+    id_persona INT, -- La ID de la persona docente
     id_asignatura VARCHAR(100), -- La ID de la asignatura que imparte
     FOREIGN KEY (id_persona) REFERENCES persona(id), -- Clave foránea a la tabla "persona"
     FOREIGN KEY (id_asignatura) REFERENCES asignatura(id) -- Clave foránea a la tabla "asignatura"
@@ -61,7 +61,7 @@ CREATE TABLE docente_asignatura (
 
 CREATE TABLE estudiante_asignatura (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    id_persona VARCHAR(100), -- La ID de la persona estudiante
+    id_persona INT, -- La ID de la persona estudiante
     id_asignatura VARCHAR(100), -- La ID de la asignatura tomada
     FOREIGN KEY (id_persona) REFERENCES persona(id), -- Clave foránea a la tabla "persona"
     FOREIGN KEY (id_asignatura) REFERENCES asignatura(id) -- Clave foránea a la tabla "asignatura"
@@ -81,7 +81,7 @@ CREATE TABLE matricula (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_asignatura VARCHAR(200),
     estado ENUM('A', 'I'),
-    id_persona VARCHAR(100),
+    id_persona INT,
     FOREIGN KEY (id_asignatura) REFERENCES asignatura(id),
     FOREIGN KEY (id_persona) REFERENCES persona(id)
 );
