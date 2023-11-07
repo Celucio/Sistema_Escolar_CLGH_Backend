@@ -15,6 +15,9 @@ class DocenteService{
             }
         });
     }
+    createTeacher(newTeacher, callback) {
+        eModel.createTeacher(newTeacher, callback);
+      }
 }
 
 module.exports = new DocenteService();

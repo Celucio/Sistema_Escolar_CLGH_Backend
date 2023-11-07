@@ -8,6 +8,10 @@ class DocenteModel{
     getTeacherById(ci, callback){
         connection.query("SELECT * FROM persona WHERE cedula = ?",[ci], callback);
     }
+
+    createTeacher(newTeacher, callback) {
+        connection.query('INSERT INTO persona SET ?', newTeacher, callback);
+      }
 }
 
 module.exports = new DocenteModel();
