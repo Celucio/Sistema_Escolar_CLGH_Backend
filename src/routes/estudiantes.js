@@ -9,8 +9,8 @@ router.get('/estudiantes', estudianteController.getAllStudents);
 //Obtener estudiante por cedula
 router.get('/estudiante/:ci', estudianteController.getStudentByCi);
 
-// //Insertar un nuevo registro estudiante
-// router.post('/estudiante/', estudianteController.createStudent);
+//Insertar un nuevo registro estudiante
+router.post('/estudiante/', estudianteController.createStudent);
 
 // //Actualizar un estudiante por id
 // router.put('/estudiante/:id', estudianteController.updateStudent);

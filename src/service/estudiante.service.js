@@ -7,13 +7,10 @@ class EstudianteService {
     }
 
     getStudentByCi(ci, callback) {
-        eModel.getStudentById(ci, (err, result) => {
-            if (err) {
-                callback(err, null); // Pasa el error al callback
-            } else {
-                callback(null, result); // Pasa el resultado al callback
-            }
-        });
+        eModel.getStudentById(ci, callback);
+    }
+    createStudent(estudiante, callback) {
+        eModel.createStudent(estudiante, callback)
     }
 
 }
