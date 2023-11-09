@@ -1,0 +1,114 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum TipoPersona {
+  E
+  D
+  A
+}
+
+enum Estado {
+  A
+  I
+}
+
+model Rol {
+  id          Int          @id @default(autoincrement())
+  nombreRol   String
+  estado      Estado
+  Persona_Rol PersonaRol[]
+}
+
+model Persona {
+  id              Int          @id @default(autoincrement())
+  nombre          String
+  apellido        String
+  cedula          String
+  fechaNacimiento DateTime
+  direccion       String
+  correo          String
+  celular         String
+  tipoPersona     TipoPersona
+  roles           PersonaRol[]
+  docenteAsignatura DocenteAsignatura[]
+  estudianteAsignatura EstudianteAsignatura[]
+  matricula Matricula[]
+}
+
+model PersonaRol {
+  id        Int     @id @default(autoincrement())
+  rol       Rol     @relation(fields: [rolId], references: [id])
+  rolId     Int
+  persona   Persona @relation(fields: [personaId], references: [id])
+  personaId Int
+  estado    Estado
+}
+
+model Trimestre {
+  id         Int      @id @default(autoincrement())
+  nombre     String
+  fechaInicio DateTime
+  fechaFin   DateTime
+  asignatura Asignatura[]
+}
+
+model Grado {
+  id         Int      @id @default(autoincrement())
+  nombreGrado String  
+  asignatura Asignatura[]
+}
+model Asignatura {
+  id          Int      @id @default(autoincrement())
+  nombreMateria String
+  estado       Estado
+  grado        Grado   @relation(fields: [idGrado], references: [id])
+  idGrado     Int 
+  trimestre    Trimestre @relation(fields: [idTrimestre], references: [id])
+  idTrimestre  Int
+  docenteAsignatura DocenteAsignatura[]
+  estudianteAsignatura EstudianteAsignatura[]
+  calificacion Calificacion[]
+  matricula Matricula[]
+}
+
+model DocenteAsignatura {
+  id         Int      @id @default(autoincrement())
+  persona    Persona @relation(fields: [idPersona], references: [id])
+  idPersona  Int
+  asignatura Asignatura @relation(fields: [idAsignatura], references: [id]) 
+  idAsignatura Int
+}
+
+model EstudianteAsignatura {
+  id         Int      @id @default(autoincrement()) 
+  idPersona  Int
+  idAsignatura Int
+  persona    Persona @relation(fields: [idPersona], references: [id])
+  asignatura Asignatura @relation(fields: [idAsignatura], references: [id])
+}
+
+model Calificacion {
+  id       Int      @id @default(autoincrement())
+  valorNota Float
+  asignatura Asignatura @relation(fields: [idAsignatura], references: [id])
+  idAsignatura Int
+}
+
+model Matricula {
+  id         Int      @id @default(autoincrement())
+  idAsignatura Int
+  estado     Estado
+  idPersona  Int 
+  asignatura Asignatura @relation(fields: [idAsignatura], references: [id])
+  persona    Persona @relation(fields: [idPersona], references: [id]) 
+}
+
