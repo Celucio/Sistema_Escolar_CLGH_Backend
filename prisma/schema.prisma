@@ -29,19 +29,19 @@ model Rol {
 }
 
 model Persona {
-  id              Int          @id @default(autoincrement())
+  id              Int             @id @default(autoincrement())
   nombre          String
   apellido        String
   cedula          String
-  fechaNacimiento DateTime
+  fechaNacimiento DateTime        @db.Date
   direccion       String
   correo          String
   celular         String
   tipoPersona     TipoPersona
   roles           PersonaRol[]
-  docenteAsignatura DocenteAsignatura[]
-  estudianteAsignatura EstudianteAsignatura[]
-  matricula Matricula[]
+  matricula       Matricula[]
+  notas           Act_Est_Notas[]
+  Grado           Grado?
 }
 
 model PersonaRol {
@@ -53,62 +53,75 @@ model PersonaRol {
   estado    Estado
 }
 
-model Trimestre {
-  id         Int      @id @default(autoincrement())
-  nombre     String
-  fechaInicio DateTime
-  fechaFin   DateTime
-  asignatura Asignatura[]
+model Periodo {
+  id          Int         @id @default(autoincrement())
+  anioLectivo String
+  estado      Estado
+  matricula   Matricula[]
 }
 
 model Grado {
-  id         Int      @id @default(autoincrement())
-  nombreGrado String  
-  asignatura Asignatura[]
-}
-model Asignatura {
-  id          Int      @id @default(autoincrement())
-  nombreMateria String
-  estado       Estado
-  grado        Grado   @relation(fields: [idGrado], references: [id])
-  idGrado     Int 
-  trimestre    Trimestre @relation(fields: [idTrimestre], references: [id])
-  idTrimestre  Int
-  docenteAsignatura DocenteAsignatura[]
-  estudianteAsignatura EstudianteAsignatura[]
-  calificacion Calificacion[]
-  matricula Matricula[]
-}
-
-model DocenteAsignatura {
-  id         Int      @id @default(autoincrement())
-  persona    Persona @relation(fields: [idPersona], references: [id])
-  idPersona  Int
-  asignatura Asignatura @relation(fields: [idAsignatura], references: [id]) 
-  idAsignatura Int
-}
-
-model EstudianteAsignatura {
-  id         Int      @id @default(autoincrement()) 
-  idPersona  Int
-  idAsignatura Int
-  persona    Persona @relation(fields: [idPersona], references: [id])
-  asignatura Asignatura @relation(fields: [idAsignatura], references: [id])
-}
-
-model Calificacion {
-  id       Int      @id @default(autoincrement())
-  valorNota Float
-  asignatura Asignatura @relation(fields: [idAsignatura], references: [id])
-  idAsignatura Int
+  id          Int          @id @default(autoincrement())
+  nombreGrado String
+  asignatura  Asignatura[]
+  matriculaId Matricula?
+  persona     Persona      @relation(fields: [persId], references: [id])
+  persId      Int          @unique
 }
 
 model Matricula {
-  id         Int      @id @default(autoincrement())
-  idAsignatura Int
-  estado     Estado
-  idPersona  Int 
-  asignatura Asignatura @relation(fields: [idAsignatura], references: [id])
-  persona    Persona @relation(fields: [idPersona], references: [id]) 
+  id        Int     @id @default(autoincrement())
+  estado    Estado
+  persona   Persona @relation(fields: [idPersona], references: [id])
+  idPersona Int
+  periodo   Periodo @relation(fields: [idPeriodo], references: [id])
+  idPeriodo Int
+  grado     Grado   @relation(fields: [idGrado], references: [id])
+  idGrado   Int     @unique
 }
 
+model PeriodoCalificaciones {
+  id                 Int                     @id @default(autoincrement())
+  nombrePeriodo      String
+  actividadEducativa ActividadesEducativas[]
+}
+
+model TipoActividad {
+  id                 Int                     @id @default(autoincrement())
+  nombreActividad    String
+  actividadEducativa ActividadesEducativas[]
+  // actEdId Int
+}
+
+model ActividadesEducativas {
+  id                    Int                   @id @default(autoincrement())
+  titulo                String
+  detalleActividad      String
+  fechaInicio           DateTime              @db.Date
+  fechaFin              DateTime              @db.Date
+  tipoActividad         TipoActividad         @relation(fields: [tipoActId], references: [id])
+  tipoActId             Int
+  periodoCalificaciones PeriodoCalificaciones @relation(fields: [perCalId], references: [id])
+  perCalId              Int
+  asignatura            Asignatura            @relation(fields: [asignaturaId], references: [id])
+  asignaturaId          Int
+  notas                 Act_Est_Notas[]
+}
+
+model Asignatura {
+  id            Int                     @id @default(autoincrement())
+  nombreMateria String
+  estado        Estado
+  grado         Grado                   @relation(fields: [idGrado], references: [id])
+  idGrado       Int
+  actividades   ActividadesEducativas[]
+}
+
+model Act_Est_Notas {
+  id          Int                   @id @default(autoincrement())
+  persona     Persona               @relation(fields: [personaId], references: [id])
+  personaId   Int
+  actividades ActividadesEducativas @relation(fields: [actId], references: [id])
+  actId       Int
+  valor_nota  Float
+}
