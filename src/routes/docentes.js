@@ -16,5 +16,5 @@ router.post('/docente/', docenteController.createTeacher);
 //Actualizar el docente por id
 router.put('/docente/:id',docenteController.updateTeacher);
 
-
+//Hola
 module.exports = router;
