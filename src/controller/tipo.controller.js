@@ -22,18 +22,18 @@ class TipoController {
             res.status(500).json({ error: error.message })
         }
     }
-    async update(req, res){
-        try{ 
-          const {id} = req.params;
-          const {nombreActividad} = req.body;
-          const tipo = await tipoService.update(parseInt(id, 10),{
-            nombreActividad
-          });
-          res.json(tipo)
-        }catch(error){
-          res.status(500).json({error: error.message})
+    async update(req, res) {
+        try {
+            const { id } = req.params;
+            const { nombreActividad } = req.body;
+            const tipo = await tipoService.update(parseInt(id, 10), {
+                nombreActividad
+            });
+            res.json(tipo)
+        } catch (error) {
+            res.status(500).json({ error: error.message })
         }
-      }
+    }
 }
 
 module.exports = new TipoController();
