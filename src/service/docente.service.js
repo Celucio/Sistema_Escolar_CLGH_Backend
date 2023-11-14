@@ -1,23 +1,67 @@
-var eModel = require('../model/docente')
+const { PrismaClient } = require('@prisma/client')
 
-class DocenteService{
+const prisma = new PrismaClient();
 
-    getAllTeachers(callback){
-        eModel.getAllTeachers(callback);
+class DocenteService {
+    async getAllTeachers() {
+        try {
+            const docentes = await prisma.persona.findMany({
+                where: {
+                    tipoPersona: 'D'
+                }
+            });
+            return docentes;
+        } catch (error) {
+            throw new Error(`No se pudieron obtener todos los docentes: ${error.message}`);
+        }
     }
-
-    getTeacherByCi(ci, callback) {
-        eModel.getTeacherById(ci, (err, result) => {
-            if (err) {
-                callback(err, null); // Pasa el error al callback
-            } else {
-                callback(null, result); // Pasa el resultado al callback
-            }
-        });
+    async getTeacherByCi(cedula) {
+        try {
+            const docente = await prisma.persona.findMany({
+                where: { cedula }
+            });
+            return docente;
+        } catch (error) {
+            throw new Error(`No se pudo obtener el docente por Cédula: ${error.message}`);
+        }
     }
-    createTeacher(newTeacher, callback) {
-        eModel.createTeacher(newTeacher, callback);
-      }
+    async createTeacher({ nombre, apellido, cedula, fechaNacimiento, direccion, correo, celular, tipoPersona }) {
+        try {
+            const es = await prisma.persona.create({
+                data: {
+                    nombre,
+                    apellido,
+                    cedula,
+                    fechaNacimiento,
+                    direccion,
+                    correo,
+                    celular,
+                    tipoPersona
+                }
+            });
+            return es;
+        } catch (error) {
+            throw new Error(`No se puede agregar un docente: ${error.message}`)
+        }
+    }
+    async updateTeacher(id, { nombre, apellido, direccion, correo, celular }) {
+        try {
+            const es = await prisma.persona.update({
+                where: { id },
+                data: {
+                    nombre,
+                    apellido,
+                    direccion,
+                    correo,
+                    celular
+                }
+            });
+            return es;
+        } catch (error) {
+            throw new Error(`No se puede actualizar un docente: ${error.message}`)
+        }
+
+    }
 }
 
 module.exports = new DocenteService();
