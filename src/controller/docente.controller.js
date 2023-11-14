@@ -1,195 +1,55 @@
-var DocenteService = require('../service/docente.service')
+var docenteService = require('../service/docente.service')
 
-class DocenteController{
-    getAllTeachers(req,res){
-        DocenteService.getAllTeachers((err,teachers)=>{
-            if(err){
-                return res.status(500).json({ error: 'Error al obtener docentes' });
-            }
-            res.json(teachers)
-        });
+class DocenteController {
+    async getAllTeachers(req, res) {
+        try {
+            const docentes = await docenteService.getAllTeachers();
+            res.json(docentes);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
     }
-
-    getTeacherByCi(req, res) {
-        const { ci } = req.params;
-        DocenteService.getTeacherByCi(ci, (err, teacher) => {
-            if (err) {
-                return res.status(500).json({ error: 'Error al obtener el docente' });
+    async getTeacherByCi(req, res) {
+        try {
+            const { cedula } = req.params;
+            const docente = await docenteService.getTeacherByCi(cedula);
+            if (docente) {
+                res.json(docente);
+            } else {
+                res.status(404).json({ error: 'Estudiante no encontrada' });
             }
-            res.json(teacher);
-        });
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
     }
-
+    async createTeacher(req, res) {
+        try {
+            const { nombre, apellido, cedula, fechaNacimiento, direccion, correo, celular, tipoPersona } = req.body;
+            const docente = await docenteService.createTeacher({ nombre, apellido, cedula, fechaNacimiento, direccion, correo, celular, tipoPersona: tipoPersona || 'D' });
+            if (docente) {
+                res.json(docente);
+            } else {
+                res.status(404).json({ error: 'Docente no encontrado' });
+            }
+        } catch (error) {
+            res.status(500).json({ error: error.message })
+        }
+    }
+    async updateTeacher(req, res){
+        try{ 
+          const {id} = req.params;
+          const {nombre, apellido, direccion, correo, celular} = req.body;
+          const docente = await docenteService.updateTeacher(parseInt(id, 10),{
+            nombre,
+            apellido,
+            direccion,
+            correo,
+            celular
+          });
+          res.json(docente)
+        }catch(error){
+          res.status(500).json({error: error.message})
+        }
+      }
 }
-module.exports = new DocenteController()
-
-// function getTeacherByCi(req,res){
-//     getConnection(function (err, conn) {
-//         const { ci } = req.params;
-//         if (err) {
-//             return res.sendStatus(400);
-//         }
-//         conn.query('SELECT p.nombre, p.apellido, p.fecha_de_nacimiento, p.direccion, p.correo, p.celular, d.especializacion FROM persona p JOIN docente d ON p.id = d.id WHERE p.cedula = ?;', [ci], function (err, rows) {
-//             if (err) {
-//                 conn.release();
-//                 return res.sendStatus(400, 'No se puede conectar con la base de datos');
-//             }
-//             res.send(rows);
-//             conn.release();
-//         });
-//     });
-// }
-
-// async function createTeacher(req, res){
-//     const { nombre, apellido, cedula, fecha_de_nacimiento, direccion, correo, celular, especializacion } = req.body;
-
-//     const getLastIdQuery = "SELECT MAX(id) AS lastId FROM docente";
-
-//     getConnection(function (err, conn) {
-//         if (err) {
-//             console.log("No se puede conectar con la base de datos" + err);
-//             return;
-//         }
-
-//         conn.query(getLastIdQuery, function (err, result) {
-//             if (err) {
-//                 console.log(err);
-//                 conn.release();
-//                 return;
-//             }
-
-//             let lastId = 'DCT-1';
-//             if (result && result[0] && result[0].lastId) {
-//                 lastId = result[0].lastId;
-//                 let number = parseInt(lastId.split('-')[1]) + 1;
-//                 lastId = 'DCT-' + number;
-//             }
-
-//             const personaData = {
-//                 id: lastId,
-//                 nombre,
-//                 apellido,
-//                 cedula,
-//                 fecha_de_nacimiento,
-//                 direccion,
-//                 correo,
-//                 celular
-//             };
-
-//             const docenteData = {
-//                 id: lastId,
-//                 especializacion
-//             };
-
-//             // Iniciar una transacción
-//             conn.beginTransaction(function (err) {
-//                 if (err) {
-//                     console.log(err);
-//                     conn.release();
-//                     return;
-//                 }
-
-//                 // Insertar datos en la tabla 'persona'
-//                 conn.query('INSERT INTO persona SET ?', personaData, function (err) {
-//                     if (err) {
-//                         console.log(err);
-//                         // Deshacer la transacción en caso de error
-//                         conn.rollback(function () {
-//                             conn.release();
-//                         });
-//                     } else {
-//                         // Insertar datos en la tabla 'estudiante'
-//                         conn.query('INSERT INTO docente SET ?', docenteData, function (err) {
-//                             if (err) {
-//                                 console.log(err);
-//                                 // Deshacer la transacción en caso de error
-//                                 conn.rollback(function () {
-//                                     conn.release();
-//                                 });
-//                             } else {
-//                                 // Confirmar la transacción
-//                                 conn.commit(function (err) {
-//                                     if (err) {
-//                                         console.log(err);
-//                                     } else {
-//                                         res.json({ status: 'Registro exitoso' });
-//                                     }
-//                                     conn.release();
-//                                 });
-//                             }
-//                         });
-//                     }
-//                 });
-//             });
-//         });
-//     });
-// }
-
-// function updateTeacher(req,res){
-//     const { id } = req.params;
-//     const data = {
-//         nombre: req.body.nombre,
-//         apellido: req.body.apellido,
-//         direccion: req.body.direccion,
-//         correo: req.body.correo,
-//         celular: req.body.celular,
-//         especializacion: req.body.especializacion
-//     };
-
-//     getConnection(function (err, conn) {
-//         if (err) {
-//             console.log('No se puede acceder a la base de datos', err);
-//             return;
-//         }
-
-//         // Iniciar una transacción
-//         conn.beginTransaction(function (err) {
-//             if (err) {
-//                 console.log('Error al iniciar la transacción', err);
-//                 conn.release();
-//                 return;
-//             }
-
-//             // Actualizar la tabla 'persona'
-//             conn.query('UPDATE persona SET nombre = ?, apellido = ?, direccion = ?, correo = ?, celular = ? WHERE id = ?', [
-//                 data.nombre,
-//                 data.apellido,
-//                 data.direccion,
-//                 data.correo,
-//                 data.celular,
-//                 id
-//             ], function (err) {
-//                 if (err) {
-//                     console.log('Error al actualizar la tabla persona', err);
-//                     conn.rollback(function () {
-//                         conn.release();
-//                     });
-//                 } else {
-//                     // Actualizar la tabla 'docente'
-//                     conn.query('UPDATE docente SET especializacion = ? WHERE id = ?', [
-//                         data.especializacion,
-//                         id
-//                     ], function (err) {
-//                         if (err) {
-//                             console.log('Error al actualizar la tabla docente', err);
-//                             conn.rollback(function () {
-//                                 conn.release();
-//                             });
-//                         } else {
-//                             // Confirmar la transacción
-//                             conn.commit(function (err) {
-//                                 if (err) {
-//                                     console.log('Error al confirmar la transacción', err);
-//                                 } else {
-//                                     res.json({ status: 'El registro se ha actualizado' });
-//                                 }
-//                                 conn.release();
-//                             });
-//                         }
-//                     });
-//                 }
-//             });
-//         });
-//     });
-// }
-
+module.exports = new DocenteController();
