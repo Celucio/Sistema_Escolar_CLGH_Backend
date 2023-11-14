@@ -14,7 +14,7 @@ router.get('/docente/:ci', docenteController.getTeacherByCi);
 router.post('/docente/', docenteController.createTeacher);
 
 //Actualizar el docente por id
-//router.put('/docente/:id',docenteController.updateTeacher);
+router.put('/docente/:id',docenteController.updateTeacher);
 
 
 module.exports = router;

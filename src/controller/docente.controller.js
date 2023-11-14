@@ -35,5 +35,21 @@ class DocenteController {
             res.status(500).json({ error: error.message })
         }
     }
+    async updateTeacher(req, res){
+        try{ 
+          const {id} = req.params;
+          const {nombre, apellido, direccion, correo, celular} = req.body;
+          const docente = await docenteService.updateTeacher(parseInt(id, 10),{
+            nombre,
+            apellido,
+            direccion,
+            correo,
+            celular
+          });
+          res.json(docente)
+        }catch(error){
+          res.status(500).json({error: error.message})
+        }
+      }
 }
 module.exports = new DocenteController();
