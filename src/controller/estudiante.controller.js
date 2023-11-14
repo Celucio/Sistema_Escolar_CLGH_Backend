@@ -35,6 +35,22 @@ class EstudianteController {
       res.status(500).json({error: error.message})
     }
   }
+  async updateStudent(req, res){
+    try{ 
+      const {id} = req.params;
+      const {nombre, apellido, direccion, correo, celular} = req.body;
+      const estudiante = await estudianteService.updateStudent(parseInt(id, 10),{
+        nombre,
+        apellido,
+        direccion,
+        correo,
+        celular
+      });
+      res.json(estudiante)
+    }catch(error){
+      res.status(500).json({error: error.message})
+    }
+  }
 }
 
 module.exports = new EstudianteController();
