@@ -2,4 +2,27 @@ const { PrismaClient } = require('@prisma/client')
 
 const prisma = new PrismaClient();
 
-//Que bien carlos eres increible
+class RolService{
+    async getAll() {
+        try {
+            const rol = await prisma.rol.findMany();
+            return rol;
+        } catch (error) {
+            throw new Error(`No se pudieron obtener todos los roles: ${error.message}`);
+        }
+    }
+    async create({nombreRol, estado}){
+        try {
+            const rol = await prisma.rol.create({
+                data: {
+                    nombreRol,
+                    estado
+                }
+            });
+            return rol;
+        } catch (error) {
+            throw new Error(`No se puede agregar un estudiante: ${error.message}`)
+        }
+    }
+}
+module.exports = new RolService();
