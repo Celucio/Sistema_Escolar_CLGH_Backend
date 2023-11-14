@@ -124,4 +124,8 @@ model Act_Est_Notas {
   actividades ActividadesEducativas @relation(fields: [actId], references: [id])
   actId       Int
   valor_nota  Float
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> ca29f2dc766cca75f85b003aef72ce0890b01302
