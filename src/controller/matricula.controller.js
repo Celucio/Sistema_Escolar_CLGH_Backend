@@ -12,8 +12,8 @@ class MatriculaController {
 
     async create(req, res) {
         try {
-            const { estado, idPErsona, idPEriodo, idGrado } = req.body;
-            const matricula = await matriculaService.create({ estado, idPErsona, idPEriodo, idGrado });
+            const { estado, idPersona, idPeriodo, idGrado } = req.body;
+            const matricula = await matriculaService.create({ estado, idPersona, idPeriodo, idGrado });
             if (matricula) {
                 res.json(matricula);
             } else {

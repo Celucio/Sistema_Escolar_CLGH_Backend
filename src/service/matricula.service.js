@@ -9,23 +9,23 @@ class MatriculaService {
             const matriculas = await prisma.matricula.findMany();
             return matriculas;
         } catch (error) {
-            throw new Error(`No se pudieron obtener todos los grados: ${error.message}`);
+            throw new Error(`No se pudieron obtener todas las matriculas: ${error.message}`);
         }
     }
 
-    async create({ estado, idPErsona, idPEriodo, idGrado }) {
+    async create({ estado, idPersona, idPeriodo, idGrado }) {
         try {
             const es = await prisma.matricula.create({
                 data: {
                     estado,
-                    idPErsona,
-                    idPEriodo,
+                    idPersona,
+                    idPeriodo,
                     idGrado
                 }
             });
             return es;
         } catch (error) {
-            throw new Error(`No se puede agregar un grado: ${error.message}`)
+            throw new Error(`No se puede agregar la matricula: ${error.message}`)
         }
     }
 }
