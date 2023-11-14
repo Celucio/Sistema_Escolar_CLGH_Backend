@@ -34,19 +34,6 @@ class TipoController {
           res.status(500).json({error: error.message})
         }
       }
-    async delete(req,res){
-        try{
-            const {id} = req.params;
-            const tipo = await tipoService.delete(parseInt(id, 10));
-            if (tipo) {
-                res.json(tipo);
-            } else {
-                res.status(404).json({ error: 'No se logro crear' });
-            }
-        }catch(error){
-            res.status(500).json({error: error.message})
-        }
-    }
 }
 
 module.exports = new TipoController();
