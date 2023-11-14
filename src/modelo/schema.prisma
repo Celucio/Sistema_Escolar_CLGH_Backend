@@ -64,7 +64,7 @@ model Grado {
   id          Int          @id @default(autoincrement())
   nombreGrado String
   asignatura  Asignatura[]
-  matriculaId Matricula?
+  matriculaId Matricula[]
   persona     Persona      @relation(fields: [persId], references: [id])
   persId      Int          @unique
 }
@@ -77,7 +77,7 @@ model Matricula {
   periodo   Periodo @relation(fields: [idPeriodo], references: [id])
   idPeriodo Int
   grado     Grado   @relation(fields: [idGrado], references: [id])
-  idGrado   Int     @unique
+  idGrado   Int
 }
 
 model PeriodoCalificaciones {

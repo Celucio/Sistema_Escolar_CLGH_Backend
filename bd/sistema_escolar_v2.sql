@@ -37,24 +37,24 @@ CREATE TABLE trimestre (
 
 CREATE TABLE grado (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre_grado VARCHAR(100),
-    id_trimestre INT,
-    FOREIGN KEY (id_trimestre) REFERENCES trimestre(id)
+    nombre_grado VARCHAR(100)
 );
 
 -- Crear la tabla Asignatura
 CREATE TABLE asignatura (
-    id VARCHAR(100) PRIMARY KEY,
+    id INT PRIMARY KEY AUTO_INCREMENT,
     nombre_materia VARCHAR(255),
     id_grado INT,
+    id_trimestre INT,
     estado ENUM('A', 'I'),
-    FOREIGN KEY (id_grado) REFERENCES grado(id)
+    FOREIGN KEY (id_grado) REFERENCES grado(id),
+    FOREIGN KEY (id_trimestre) REFERENCES trimestre(id)
 );
 
 CREATE TABLE docente_asignatura (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_persona INT, -- La ID de la persona docente
-    id_asignatura VARCHAR(100), -- La ID de la asignatura que imparte
+    id_asignatura INT, -- La ID de la asignatura que imparte
     FOREIGN KEY (id_persona) REFERENCES persona(id), -- Clave foránea a la tabla "persona"
     FOREIGN KEY (id_asignatura) REFERENCES asignatura(id) -- Clave foránea a la tabla "asignatura"
 );
@@ -62,7 +62,7 @@ CREATE TABLE docente_asignatura (
 CREATE TABLE estudiante_asignatura (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_persona INT, -- La ID de la persona estudiante
-    id_asignatura VARCHAR(100), -- La ID de la asignatura tomada
+    id_asignatura INT, -- La ID de la asignatura tomada
     FOREIGN KEY (id_persona) REFERENCES persona(id), -- Clave foránea a la tabla "persona"
     FOREIGN KEY (id_asignatura) REFERENCES asignatura(id) -- Clave foránea a la tabla "asignatura"
 );

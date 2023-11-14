@@ -59,7 +59,6 @@ CREATE TABLE `Matricula` (
     `idPeriodo` INTEGER NOT NULL,
     `idGrado` INTEGER NOT NULL,
 
-    UNIQUE INDEX `Matricula_idGrado_key`(`idGrado`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
