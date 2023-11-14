@@ -13,7 +13,7 @@ router.get('/estudiante/:cedula', estudianteController.getStudentByCi);
 router.post('/estudiante/', estudianteController.createStudent);
 
 //Actualizar un estudiante por id
-//router.put('/estudiante/:ci', estudianteController.updateStudent);
+router.put('/estudiante/:id', estudianteController.updateStudent);
 
 
 module.exports = router;
