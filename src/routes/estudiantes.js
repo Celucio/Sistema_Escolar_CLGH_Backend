@@ -10,7 +10,7 @@ router.get('/estudiantes', estudianteController.getAllStudents);
 router.get('/estudiante/:cedula', estudianteController.getStudentByCi);
 
 //Insertar un nuevo registro estudiante
-//router.post('/estudiante/', estudianteController.createStudent);
+router.post('/estudiante/', estudianteController.createStudent);
 
 //Actualizar un estudiante por id
 //router.put('/estudiante/:ci', estudianteController.updateStudent);
