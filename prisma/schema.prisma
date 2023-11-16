@@ -14,6 +14,7 @@ enum TipoPersona {
   E
   D
   A
+  S
 }
 
 enum Estado {
@@ -105,6 +106,7 @@ model ActividadesEducativas {
   perCalId              Int
   asignatura            Asignatura            @relation(fields: [asignaturaId], references: [id])
   asignaturaId          Int
+  estado                Estado
   notas                 Act_Est_Notas[]
 }
 
