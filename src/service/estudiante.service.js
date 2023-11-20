@@ -28,15 +28,10 @@ class EstudianteService {
     }
     async createStudent({ nombre, apellido, cedula, fechaNacimiento, direccion, correo, celular, tipoPersona }) {
         try {
-            // Asegúrate de que fechaNacimiento sea un objeto Date
         const fechaNacimientoDate = new Date(fechaNacimiento);
-
-        // Verifica si fechaNacimiento es un objeto Date válido
         if (isNaN(fechaNacimientoDate.getTime())) {
             throw new Error('Fecha de nacimiento no válida.');
         }
-
-        // Convierte la fecha a formato ISO-8601
         const fechaNacimientoISO = fechaNacimientoDate.toISOString();
             const es = await prisma.persona.create({
                 data: {

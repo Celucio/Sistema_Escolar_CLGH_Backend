@@ -30,9 +30,6 @@ class NotaService {
     async crearNotas(asignaturaId){
         try {
             const estudiantes = await prisma.matricula.findMany({
-                where: {
-                    asignaturaId
-                },
                 include: {
                     persona: true
                 }

@@ -7,8 +7,6 @@ const router = express.Router();
 router.get('/notas', notasController.getAll);
 
 //Registro de notas automático
-router.post('/notas/:asignaturaId', (req, res) => {
-    notasController.registrarNotasAsignatura(req, res)
-  });
+router.post('/notas/:asignaturaId', notasController.registrarNotasAsignatura);
 
 module.exports = router;
