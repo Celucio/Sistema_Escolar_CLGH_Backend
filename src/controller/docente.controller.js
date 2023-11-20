@@ -14,13 +14,13 @@ class DocenteController {
             const { cedula } = req.params;
             const docente = await docenteService.getTeacherByCi(cedula);
             if (docente) {
-                res.json(docente);
+              res.json(docente);
             } else {
-                res.status(404).json({ error: 'Estudiante no encontrada' });
+              res.status(404).json({ error: 'Docente no encontrado' });
             }
-        } catch (error) {
+          } catch (error) {
             res.status(500).json({ error: error.message });
-        }
+          }
     }
     async createTeacher(req, res) {
         try {
