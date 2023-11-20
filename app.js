@@ -7,17 +7,17 @@ const http = require('http').Server(app);
 const hostname = '127.0.0.1';
 const port = 3000;
 
-app.use(express.json());
-
-//cabeceras CORS
-app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", ["Origin", "X-Requested-With", "Content-Type", "Accept"]);
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE"); 
+// Middleware para habilitar CORS
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
   next();
 });
 
+app.use(express.json());
 
+// Rutas dinámicas
 const routesDirectory = path.join(__dirname, 'src', 'routes');
 const routeFiles = fs.readdirSync(routesDirectory);
 
@@ -29,7 +29,6 @@ routeFiles.forEach((routeFile) => {
     app.use('/api/',routeModule);
   }
 });
-
 
 http.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);
