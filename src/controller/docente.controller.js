@@ -29,7 +29,7 @@ class DocenteController {
             if (docente) {
                 res.json(docente);
             } else {
-                res.status(404).json({ error: 'Docente no encontrado' });
+                res.status(404).json({ error: 'No se pudo agregar un docente' });
             }
         } catch (error) {
             res.status(500).json({ error: error.message })

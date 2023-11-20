@@ -25,7 +25,12 @@ class ActividadController{
     async create(req,res){
         try{
             const {titulo,detalleActividad,fechaInicio,fechaFin,tipoActId,perCalId,asignaturaId} = req.body;
-
+            const actividades = await actividadService.create({titulo,detalleActividad,fechaFin,fechaFin, tipoActId, perCalId, asignaturaId})
+            if(actividades){
+                res.json(actividades);
+            }else{
+                res.status(500).json({error: 'No se pudo agregar un docente'})
+            }
         }catch(error){
             res.status(500)
         }

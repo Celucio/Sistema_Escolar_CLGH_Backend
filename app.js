@@ -26,7 +26,7 @@ routeFiles.forEach((routeFile) => {
   const routeModule = require(routePath);
 
   if (typeof routeModule === 'function') {
-    app.use(routeModule);
+    app.use('/api/',routeModule);
   }
 });
 

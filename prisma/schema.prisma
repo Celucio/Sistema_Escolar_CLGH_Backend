@@ -34,7 +34,7 @@ model Persona {
   nombre          String
   apellido        String
   cedula          String
-  fechaNacimiento DateTime        @db.Date
+  fechaNacimiento DateTime
   direccion       String
   correo          String
   celular         String
