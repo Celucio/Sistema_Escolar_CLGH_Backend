@@ -10,4 +10,7 @@ router.get('/matriculas', matriculaController.getAll);
 //Insertar nuevo grado
 router.post('/matricula/', matriculaController.create);
 
+//Obtener matricula por id
+router.get('/matricula/:id', matriculaController.getById);
+
 module.exports = router;

@@ -18,7 +18,10 @@ class DocenteService {
     async getTeacherByCi(cedula) {
         try {
             const docente = await prisma.persona.findMany({
-                where: { cedula }
+                where: {
+                    cedula,
+                    tipoPersona: 'D'
+                }
             });
             return docente;
         } catch (error) {
