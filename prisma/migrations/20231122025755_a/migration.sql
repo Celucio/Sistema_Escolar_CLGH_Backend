@@ -13,11 +13,11 @@ CREATE TABLE `Persona` (
     `nombre` VARCHAR(191) NOT NULL,
     `apellido` VARCHAR(191) NOT NULL,
     `cedula` VARCHAR(191) NOT NULL,
-    `fechaNacimiento` DATE NOT NULL,
+    `fechaNacimiento` DATETIME(3) NOT NULL,
     `direccion` VARCHAR(191) NOT NULL,
     `correo` VARCHAR(191) NOT NULL,
     `celular` VARCHAR(191) NOT NULL,
-    `tipoPersona` ENUM('E', 'D', 'A') NOT NULL,
+    `tipoPersona` ENUM('E', 'D', 'A', 'S') NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -88,6 +88,7 @@ CREATE TABLE `ActividadesEducativas` (
     `tipoActId` INTEGER NOT NULL,
     `perCalId` INTEGER NOT NULL,
     `asignaturaId` INTEGER NOT NULL,
+    `estado` ENUM('A', 'I') NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

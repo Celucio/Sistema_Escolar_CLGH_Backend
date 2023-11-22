@@ -25,6 +25,27 @@ class NotasController {
             res.status(500).json({ error: error.message });
         }
     }
+    async notasEstudiante(req,res){
+        try{
+            const { id } = req.params
+            const notasEstudiante = await notaService.notasEstudiante(id)
+            res.json(notasEstudiante)
+        }catch(error){
+            res.status(500).json({ error: error.message });
+        }
+    }
+    async asignarNota(req,res){
+        try{
+            const { id } = req.params
+            const { valor_nota } = req.body
+            const notaAsignada = await notaService.asignarNota(parseInt(id, 10), {
+                valor_nota
+            })
+            res.json(notaAsignada)
+        }catch(error){
+            res.status(500).json({ error: error.message });
+        }
+    }
 }
 
 module.exports = new NotasController();
