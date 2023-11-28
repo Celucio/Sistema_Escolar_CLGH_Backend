@@ -37,15 +37,19 @@ class ActividadService {
     async create({ titulo, detalleActividad, fechaInicio, fechaFin, tipoActId, perCalId, asignaturaId }) {
         try {
             // Asegúrate de que fechaNacimiento sea un objeto Date
-            const fechaNacimientoDate = new Date(fechaNacimiento);
+            const fechaInicio = new Date(fechaInicio);
+            const fechaFin =new Date(fechaFin)
 
             // Verifica si fechaNacimiento es un objeto Date válido
-            if (isNaN(fechaNacimientoDate.getTime())) {
+            if (isNaN(fechaInicioDate.getTime())) {
+                throw new Error('Fecha de nacimiento no válida.');
+            }
+            if (isNaN(fechaFinDate.getTime())) {
                 throw new Error('Fecha de nacimiento no válida.');
             }
             // Convierte la fecha a formato ISO-8601
-            const fechaInicioISO = fechaNacimientoDate.toISOString();
-            const fechaFinISO = fechaNacimientoDate.toISOString();
+            const fechaInicioISO = fechaInicioDate.toISOString();
+            const fechaFinISO = fechaFinDate.toISOString();
             const act = await prisma.actividadesEducativas.create({
                 data: {
                     titulo,
