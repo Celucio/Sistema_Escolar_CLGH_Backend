@@ -14,7 +14,6 @@ enum TipoPersona {
   E
   D
   A
-  S
 }
 
 enum Estado {
@@ -98,8 +97,8 @@ model ActividadesEducativas {
   id                    Int                   @id @default(autoincrement())
   titulo                String
   detalleActividad      String
-  fechaInicio           DateTime              @db.Date
-  fechaFin              DateTime              @db.Date
+  fechaInicio           DateTime              
+  fechaFin              DateTime              
   tipoActividad         TipoActividad         @relation(fields: [tipoActId], references: [id])
   tipoActId             Int
   periodoCalificaciones PeriodoCalificaciones @relation(fields: [perCalId], references: [id])
