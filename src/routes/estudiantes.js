@@ -4,7 +4,7 @@ const express = require('express');
 const router = express.Router();
 
 //consultar todos los estudiantes de la tabla
-router.get('/estudiantes', estudianteController.getAllStudents);
+router.get('/estudiante', estudianteController.getAllStudents);
 
 //Obtener estudiante por cedula
 router.get('/estudiante/:cedula', estudianteController.getStudentByCi);
