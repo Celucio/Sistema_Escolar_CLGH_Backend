@@ -5,9 +5,12 @@ const router = express.Router();
 
 
 //consultar todos los grados de la tabla
-router.get('/grados', gradoController.getAll);
+router.get('/grado', gradoController.getAll);
 
 //Insertar nuevo grado
 router.post('/grado/', gradoController.create);
+
+//Actualizar grado
+router.put('/grado/:id', gradoController.update);
 
 module.exports = router;

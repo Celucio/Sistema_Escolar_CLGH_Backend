@@ -26,6 +26,22 @@ class PeriodoService {
             throw new Error(`No se puede agregar un periodo: ${error.message}`)
         }
     }
+    async update(id, {anioLectivo, estado}) {
+        try {
+            const es = await prisma.periodo.update({
+                where: {
+                    id
+                },
+                data: {
+                    anioLectivo,
+                    estado
+                }
+            });
+            return es;
+        } catch (error) {
+            throw new Error(`No se puede actualizar el periodo: ${error.message}`)
+        }
+    }
 }
 
 module.exports = new PeriodoService();

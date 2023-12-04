@@ -10,4 +10,7 @@ router.get('/periodos', periodoController.getAll);
 //Insertar nuevo periodo
 router.post('/periodo/', periodoController.create);
 
+//Actualizar periodo
+router.put('/periodo/:id', periodoController.update);
+
 module.exports = router;

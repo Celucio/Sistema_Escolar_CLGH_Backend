@@ -23,6 +23,21 @@ class PeriodoCalService{
             throw new Error(`No se puede agregar: ${error.message}`)
         }
     }
+    async update(id, {nombrePeriodo}){
+        try{
+            const periodoCal = await prisma.periodoCalificaciones.update({
+                where:{
+                    id
+                },
+                data:{
+                    nombrePeriodo
+                }
+            });
+            return periodoCal;
+        }catch(error){
+            throw new Error(`No se puede actualizar: ${error.message}`)
+        }
+    }
 }
 
 module.exports = new PeriodoCalService()

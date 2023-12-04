@@ -39,7 +39,7 @@ class ActividadController{
     async update(req,res){
         try{
             const {id} = req.params;
-            const {titulo,detalleActividad,fechaInicio,fechaFin,tipoActId,perCalId,asignaturaId} = req.body;
+            const {titulo,detalleActividad,fechaInicio,fechaFin,tipoActId,perCalId,asignaturaId,estado} = req.body;
             const actividades = await actividadService.update(parseInt(id, 10),{
                 titulo,
                 detalleActividad,
@@ -47,8 +47,18 @@ class ActividadController{
                 fechaFin,
                 tipoActId,
                 perCalId,
-                asignaturaId
+                asignaturaId,
+                estado
             });
+            res.json(actividades);
+        }catch(error){
+            res.status(500).json({error: error.message})
+        }
+    }
+    async actividadesPorPeriodoCalificaciones(req,res){
+        try{
+            const {id} = req.params;
+            const actividades = await actividadService.actividadesPorPeriodoCalificaciones(parseInt(id, 10));
             res.json(actividades);
         }catch(error){
             res.status(500).json({error: error.message})

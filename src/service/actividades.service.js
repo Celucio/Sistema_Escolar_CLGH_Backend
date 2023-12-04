@@ -60,7 +60,7 @@ class ActividadService {
             throw new Error(`No se puede agregar: ${error.message}`)
         }
     }
-    async update(id, { titulo, detalleActividad, fechaInicio, fechaFin, tipoActId, perCalId, asignaturaId }) {
+    async update(id, { titulo, detalleActividad, fechaInicio, fechaFin, tipoActId, perCalId, asignaturaId, estado }) {
 
         try {
             const fechaI = new Date(fechaInicio);
@@ -79,12 +79,37 @@ class ActividadService {
                     fechaFin: fechaFinISO,
                     tipoActId,
                     perCalId,
-                    asignaturaId
+                    asignaturaId,
+                    estado
                 }
             });
             return act;
         } catch (error) {
             throw new Error(`No se puede actualizar: ${error.message}`)
+        }
+    }
+    async actividadesPorPeriodoCalificaciones(id) {
+        try {
+            const actividades = await prisma.actividadesEducativas.findMany({
+                where: {
+                    perCalId: parseInt(id, 10)
+                },
+                include: {
+                    periodoCalificaciones: {
+                        select: {
+                            nombrePeriodo: true
+                        }
+                    },
+                    tipoActividad: {
+                        select: {
+                            nombreActividad: true
+                        }
+                    }
+                }
+            });
+            return actividades;
+        } catch (error) {
+            throw new Error(`No se pudieron obtener las actividades: ${error.message}`);
         }
     }
 }

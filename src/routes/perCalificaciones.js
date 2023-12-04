@@ -10,6 +10,6 @@ router.get('/periodoCalificaciones', perCalController.getAll);
 router.post('/periodoCalificaciones', perCalController.create);
 
 //Actualizar
-router.put('/periodoCalificaciones', perCalController.update);
+router.put('/periodoCalificaciones/:id', perCalController.update);
 
 module.exports = router;

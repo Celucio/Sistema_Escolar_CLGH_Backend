@@ -14,7 +14,14 @@ class AsignaturaService {
     async getAsignatureById(id) {
         try {
             const asignatura = await prisma.asignatura.findMany({
-                where: { id }
+                where: { id },
+                include:{
+                    grado:{
+                        select:{
+                            nombreGrado: true
+                        }
+                    }
+                }
             });
             return asignatura;
         } catch (error) {
@@ -33,6 +40,23 @@ class AsignaturaService {
             return es;
         } catch (error) {
             throw new Error(`No se puede agregar una asignatura: ${error.message}`)
+        }
+    }
+    async update(id, {nombreMateria, estado, idGrado}) {
+        try {
+            const es = await prisma.asignatura.update({
+                where: {
+                    id
+                },
+                data: {
+                    nombreMateria,
+                    estado,
+                    idGrado
+                }
+            });
+            return es;
+        } catch (error) {
+            throw new Error(`No se puede actualizar la asignatura: ${error.message}`)
         }
     }
 }
