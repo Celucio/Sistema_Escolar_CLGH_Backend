@@ -69,13 +69,20 @@ class ActividadService {
     async update(id, { titulo, detalleActividad, fechaInicio, fechaFin, tipoActId, perCalId, asignaturaId }) {
 
         try {
+            const fechaI = new Date(fechaInicio);
+            const fechaF = new Date(fechaFin);
+            if (isNaN(fechaI&&fechaF.getTime())) {
+                throw new Error('Fecha no válida.');
+            }
+            const fechaInISO = fechaI.toISOString();
+            const fechaFinISO = fechaF.toISOString();
             const act = await prisma.actividadesEducativas.update({
                 where: { id },
                 data: {
                     titulo,
                     detalleActividad,
-                    fechaInicio,
-                    fechaFin,
+                    fechaInicio: fechaInISO,
+                    fechaFin: fechaFinISO,
                     tipoActId,
                     perCalId,
                     asignaturaId

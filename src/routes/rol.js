@@ -3,10 +3,12 @@ const express = require('express');
 const router = express.Router();
 
 //Consultar todos los roles 
-router.get('/roles', rolController.getAll);
+router.get('/rol', rolController.getAll);
 
 //Crear un nuevo rol
 router.post('/rol', rolController.create);
 
+//Actualizar un rol
+router.put('/rol/:id', rolController.update);
 
 module.exports = router;

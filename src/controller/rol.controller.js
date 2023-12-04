@@ -22,6 +22,20 @@ class RolController {
             res.status(500).json({ error: error.message })
         }
     }
+    async update(req, res) {
+        try {
+            const {id} = req.params;
+            const { nombreRol, estado } = req.body;
+            const rol = await rolService.update(parseInt(id, 10), {nombreRol, estado});
+            if (rol) {
+                res.json(rol);
+            } else {
+                res.status(404).json({ error: 'No se logro actualizar' });
+            }
+        } catch (error) {
+            res.status(500).json({ error: error.message })
+        }
+    }
 }
 
 module.exports = new RolController();

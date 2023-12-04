@@ -30,10 +30,18 @@ class NotaService {
     }
     async crearNotas(asignaturaId) {
         try {
+            // Obtener el grado de la asignatura  
+            const asignatura = await prisma.asignatura.findUnique({
+                where: { id: asignaturaId },
+                select: { idGrado: true }
+            });
+
+            const idGrado = asignatura.idGrado;
+
+            // Filtrar matriculas por ese grado
             const estudiantes = await prisma.matricula.findMany({
-                include: {
-                    persona: true
-                }
+                where: { idGrado },
+                include: { persona: true }
             });
             const actividades = await prisma.actividadesEducativas.findMany({
                 where: {
@@ -48,7 +56,7 @@ class NotaService {
                         data: {
                             personaId: estudiante.idPersona,
                             actId: actividad.id,
-                            valor_nota
+                            valor_nota: 0
                         }
                     })
 
@@ -84,7 +92,7 @@ class NotaService {
             throw new Error(`No se pudieron obtener todas las notas: ${error.message}`)
         }
     }
-    async asignarNota(id, {valor_nota}) {
+    async asignarNota(id, { valor_nota }) {
         try {
             const notaActualizada = await prisma.act_Est_Notas.update({
                 where: {
@@ -94,7 +102,7 @@ class NotaService {
                     valor_nota
                 },
                 select: {
-                    valor_nota:true,
+                    valor_nota: true,
                     persona: {
                         select: {
                             nombre: true,
