@@ -22,8 +22,38 @@ class EstudianteController {
       res.status(500).json({ error: error.message });
     }
   }
+
+  async getEstudianteByCorreo(req, res) {
+    try {
+      const { correo } = req.params;
+      const estudiante = await estudianteService.getStudentByCorreo(correo);
+      if (estudiante) {
+        res.json(estudiante);
+      } else {
+        res.status(404).json({ error: 'Estudiante no encontrada' });
+      }
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+  
+  async getEstudianteByCelular(req, res) {
+    try {
+      const { celular } = req.params;
+      const estudiante = await estudianteService.getStudentByCelular(celular);
+      if (estudiante) {
+        res.json(estudiante);
+      } else {
+        res.status(404).json({ error: 'Estudiante no encontrada' });
+      }
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+
   async createStudent(req, res){
     try{
+      
       const { nombre, apellido, cedula, fechaNacimiento, direccion, correo, celular, tipoPersona } = req.body;
       const estudiante = await estudianteService.createStudent({nombre,apellido,cedula,fechaNacimiento,direccion,correo,celular,tipoPersona: tipoPersona || 'E'});
       if (estudiante) {
@@ -51,6 +81,16 @@ class EstudianteController {
       res.status(500).json({error: error.message})
     }
   }
+  async obtenerPersonasPorActividadYAsignatura(req, res) {
+    try {
+      const { actividadId, asignaturaId } = req.query;
+      const personasConActividad = await estudianteService.getPersonasPorActividadYAsignatura(actividadId, asignaturaId);
+      res.json(personasConActividad);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+  
 }
 
 module.exports = new EstudianteController();

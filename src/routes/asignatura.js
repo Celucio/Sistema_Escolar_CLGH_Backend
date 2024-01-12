@@ -5,12 +5,18 @@ const router = express.Router();
 
 
 //consultar todos las asignaturas de la tabla
-router.get('/asignaturas', asignaturaController.getAllAsignatures);
+router.get('/asignatura', asignaturaController.getAllAsignatures);
 
 //Obtener asignaturas por ID
 router.get('/asignatura/:id', asignaturaController.getAsignatureById);
 
 //Insertar nueva asignatura
 router.post('/asignatura/', asignaturaController.createAsignature);
+
+//Actualizar asignatura
+router.put('/asignatura/:id', asignaturaController.update);
+// Ejemplo de cómo usar la respuesta en tu ruta o controlador
+router.get('/asignaturaWithGrado', asignaturaController.getAllAsignaturasWithGrado);
+
 
 module.exports = router;

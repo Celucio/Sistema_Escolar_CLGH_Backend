@@ -5,9 +5,12 @@ const router = express.Router();
 
 
 //consultar todos los periodos de la tabla
-router.get('/periodos', periodoController.getAll);
+router.get('/periodo', periodoController.getAll);
 
 //Insertar nuevo periodo
 router.post('/periodo/', periodoController.create);
+
+//Actualizar periodo
+router.put('/periodo/:id', periodoController.update);
 
 module.exports = router;

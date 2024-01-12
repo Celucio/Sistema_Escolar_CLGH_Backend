@@ -56,7 +56,7 @@ model PersonaRol {
 model Periodo {
   id          Int         @id @default(autoincrement())
   anioLectivo String
-  estado      Estado
+  estado      String
   matricula   Matricula[]
 }
 
@@ -83,6 +83,7 @@ model Matricula {
 model PeriodoCalificaciones {
   id                 Int                     @id @default(autoincrement())
   nombrePeriodo      String
+  estado             String
   actividadEducativa ActividadesEducativas[]
 }
 
@@ -105,7 +106,7 @@ model ActividadesEducativas {
   perCalId              Int
   asignatura            Asignatura            @relation(fields: [asignaturaId], references: [id])
   asignaturaId          Int
-  estado                Estado
+  estado                String
   notas                 Act_Est_Notas[]
 }
 

@@ -28,12 +28,52 @@ class DocenteService {
             throw new Error(`No se pudo obtener el docente por Cédula: ${error.message}`);
         }
     }
+    async getTeacherByCelular(celular) {
+        try {
+            const docente = await prisma.persona.findMany({
+                where: {
+                    celular,
+                    tipoPersona: 'D'
+                }
+            });
+            return docente;
+        } catch (error) {
+            throw new Error(`No se pudieron obtener el docente por celular: ${error.message}`);
+        }
+    }
+    async getTeacherByCorreo(correo) {
+        try {
+            const docente = await prisma.persona.findMany({
+                where: {
+                    correo,
+                    tipoPersona: 'D'
+                }
+            });
+            return docente;
+        } catch (error) {
+            throw new Error(`No se pudieron obtener docente por correo electrónico: ${error.message}`);
+        }
+    }
     async createTeacher({ nombre, apellido, cedula, fechaNacimiento, direccion, correo, celular, tipoPersona }) {
         try {
-            // Asegúrate de que fechaNacimiento sea un objeto Date
-            const fechaNacimientoDate = new Date(fechaNacimiento);
+            // Verificar si ya existe un estudiante con la misma cédula
+            const existingTeacher = await this.getTeacherByCi(cedula);
+    
+            if (existingTeacher.length > 0) {
+                throw new Error('Ya existe un docente con esta cédula.');
+            }
 
-            // Verifica si fechaNacimiento es un objeto Date válido
+            // Verificar si ya existe un estudiante con el mismo correo electrónico
+            const existingTeacherByCorreo = await this.getTeacherByCelular(correo);
+            if (existingTeacherByCorreo.length > 0) {
+                throw new Error('Ya existe un docente con este correo electrónico.');
+            }  
+            // Verificar si ya existe un estudiante con el mismo número de teléfono
+            const existingTeacherByCelular = await this.getTeacherByCelular(celular);
+            if (existingTeacherByCelular.length > 0) {
+            throw new Error('Ya existe un estudiante con este número de teléfono.');
+            }    
+            const fechaNacimientoDate = new Date(fechaNacimiento);
             if (isNaN(fechaNacimientoDate.getTime())) {
                 throw new Error('Fecha de nacimiento no válida.');
             }

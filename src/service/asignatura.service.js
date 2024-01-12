@@ -14,7 +14,14 @@ class AsignaturaService {
     async getAsignatureById(id) {
         try {
             const asignatura = await prisma.asignatura.findMany({
-                where: { id }
+                where: { id },
+                include:{
+                    grado:{
+                        select:{
+                            nombreGrado: true
+                        }
+                    }
+                }
             });
             return asignatura;
         } catch (error) {
@@ -27,7 +34,7 @@ class AsignaturaService {
                 data: {
                     nombreMateria,
                     estado,
-                    idGrado
+                    idGrado : parseInt(idGrado, 10)
                 }
             });
             return es;
@@ -35,6 +42,46 @@ class AsignaturaService {
             throw new Error(`No se puede agregar una asignatura: ${error.message}`)
         }
     }
+
+    
+    async update(id, {nombreMateria, estado, idGrado}) {
+        try {
+            const es = await prisma.asignatura.update({
+                where: {
+                    id
+                },
+                data: {
+                    nombreMateria,
+                    estado,
+                    idGrado
+                }
+            });
+            return es;
+        } catch (error) {
+            throw new Error(`No se puede actualizar la asignatura: ${error.message}`)
+        }
+    }
+    async getAllAsignaturasWithGrado() {
+        try {
+            const asignaturas = await prisma.asignatura.findMany({
+                include: {
+                    grado: {
+                        select: {
+                            nombreGrado: true
+                        }
+                    }
+                }
+            });
+            return asignaturas.map(asignatura => ({
+                nombreMateria: asignatura.nombreMateria,
+                nombreGrado: asignatura.grado.nombreGrado,
+                estadoMateria : asignatura.estado
+            }));
+        } catch (error) {
+            throw new Error(`No se pudieron obtener todas las asignaturas con grado: ${error.message}`);
+        }
+    }
+
 }
 
 module.exports = new AsignaturaService();

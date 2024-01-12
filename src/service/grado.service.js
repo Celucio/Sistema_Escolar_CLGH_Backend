@@ -3,19 +3,54 @@ const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient();
 
 class GradoService {
-    
+
     async getAll() {
         try {
-            const grados = await prisma.grado.findMany();
+            const grados = await prisma.grado.findMany({
+                include: {
+                    persona: {
+                        select: {
+                            nombre: true,
+                            apellido: true
+                        }
+                    }
+                }
+            });
             return grados;
         } catch (error) {
             throw new Error(`No se pudieron obtener todos los grados: ${error.message}`);
         }
     }
-  
-    async create({ nombreGrado, persId}) {
+
+    async create({ nombreGrado, persId }) {
         try {
-            const es = await prisma.grado.create({
+            persId = parseInt(persId); // Convertir persId a entero
+            const persona = await prisma.persona.findUnique({
+                where: {
+                    id: persId
+                }
+
+            });
+            if (!persona || persona.tipoPersona !== 'D') {
+                throw new Error('Sólo se pueden ingresar docentes');
+            }
+            return prisma.grado.create({
+                data: {
+                    nombreGrado,
+                    persId
+                }
+            });
+        } catch (error) {
+            throw new Error(`${error.message}`)
+        }
+    }
+
+    async update(id, { nombreGrado, persId }) {
+        try {
+            const es = await prisma.grado.update({
+                where: {
+                    id
+                },
                 data: {
                     nombreGrado,
                     persId
@@ -23,7 +58,20 @@ class GradoService {
             });
             return es;
         } catch (error) {
-            throw new Error(`No se puede agregar un grado: ${error.message}`)
+            throw new Error(`No se puede actualizar el grado: ${error.message}`)
+        }
+    }
+    async getGradosNoAsignados() {
+        try {
+            const gradosNoAsignados = await prisma.$queryRaw`
+                SELECT * FROM Grado
+                WHERE id NOT IN (
+                    SELECT DISTINCT idGrado FROM Asignatura
+                )
+            `;
+            return gradosNoAsignados;
+        } catch (error) {
+            throw new Error(`No se pudieron obtener los grados no asignados: ${error.message}`);
         }
     }
 }

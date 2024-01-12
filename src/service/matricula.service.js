@@ -61,29 +61,20 @@ class MatriculaService {
     }
 
     async create({ estado, idPersona, idPeriodo, idGrado }) {
-
-        // Validar que la persona sea estudiante
-        const persona = await prisma.persona.findUnique({ 
-          where: {
-            id: idPersona
-          }
-        });
-      
-        if (!persona || persona.tipoPersona !== 'E') {
-          throw new Error('Sólo se pueden matricular estudiantes'); 
+        try {
+            const es = await prisma.matricula.create({
+                data: {
+                    estado,
+                    idPersona: parseInt(idPersona, 10),
+                    idPeriodo:parseInt(idPeriodo, 10),
+                    idGrado:parseInt(idGrado, 10),
+                }
+            });
+            return es;
+        } catch (error) {
+            throw new Error(`No se puede agregar la matricula: ${error.message}`)
         }
-      
-        // Si es estudiante, crear la matrícula 
-        return prisma.matricula.create({
-          data: {
-            estado,
-            idPersona,
-            idPeriodo,
-            idGrado  
-          }
-        });
-      
-      }
+    }
 }
 
 module.exports = new MatriculaService();

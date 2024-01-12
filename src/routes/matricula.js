@@ -5,7 +5,7 @@ const router = express.Router();
 
 
 //consultar todos los grados de la tabla
-router.get('/matriculas', matriculaController.getAll);
+router.get('/matricula', matriculaController.getAll);
 
 //Insertar nuevo grado
 router.post('/matricula/', matriculaController.create);

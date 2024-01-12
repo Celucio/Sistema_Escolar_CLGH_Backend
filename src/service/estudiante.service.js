@@ -28,26 +28,47 @@ class EstudianteService {
             throw new Error(`No se pudieron obtener el docente por Cédula: ${error.message}`);
         }
     }
+    
+    async getStudentByCelular(celular) {
+        try {
+            const estudiante = await prisma.persona.findMany({
+                where: {
+                    celular,
+                    tipoPersona: 'E'
+                }
+            });
+            return estudiante;
+        } catch (error) {
+            throw new Error(`No se pudieron obtener el docente por Cédula: ${error.message}`);
+        }
+    }
     async createStudent({ nombre, apellido, cedula, fechaNacimiento, direccion, correo, celular, tipoPersona }) {
         try {
-<<<<<<< HEAD
-            // Asegúrate de que fechaNacimiento sea un objeto Date
-            const fechaNacimientoDate = new Date(fechaNacimiento);
+            // Verificar si ya existe un estudiante con la misma cédula
+            const existingStudent = await this.getStudentByCi(cedula);
+    
+            if (existingStudent.length > 0) {
+                throw new Error('Ya existe un estudiante con esta cédula.');
+            }
 
-            // Verifica si fechaNacimiento es un objeto Date válido
+            // Verificar si ya existe un estudiante con el mismo correo electrónico
+            const existingStudentByCorreo = await this.getStudentByCorreo(correo);
+            if (existingStudentByCorreo.length > 0) {
+                throw new Error('Ya existe un estudiante con este correo electrónico.');
+            }  
+            // Verificar si ya existe un estudiante con el mismo número de teléfono
+            const existingStudentByCelular = await this.getStudentByCelular(celular);
+            if (existingStudentByCelular.length > 0) {
+            throw new Error('Ya existe un estudiante con este número de teléfono.');
+            }    
+    
+            const fechaNacimientoDate = new Date(fechaNacimiento);
             if (isNaN(fechaNacimientoDate.getTime())) {
                 throw new Error('Fecha de nacimiento no válida.');
             }
-
-            // Convierte la fecha a formato ISO-8601
+            
             const fechaNacimientoISO = fechaNacimientoDate.toISOString();
-=======
-        const fechaNacimientoDate = new Date(fechaNacimiento);
-        if (isNaN(fechaNacimientoDate.getTime())) {
-            throw new Error('Fecha de nacimiento no válida.');
-        }
-        const fechaNacimientoISO = fechaNacimientoDate.toISOString();
->>>>>>> 5d388f94fbbd51f9e01337d8b14fa6d4c4e3884a
+            
             const es = await prisma.persona.create({
                 data: {
                     nombre,
@@ -60,11 +81,13 @@ class EstudianteService {
                     tipoPersona
                 }
             });
+    
             return es;
         } catch (error) {
             throw new Error(`No se puede agregar un estudiante: ${error.message}`)
         }
     }
+    
     async updateStudent(id, { nombre, apellido, direccion, correo, celular }) {
         try {
             const es = await prisma.persona.update({
@@ -83,6 +106,42 @@ class EstudianteService {
         }
 
     }
+    async getStudentByCorreo(correo) {
+        try {
+            const estudiante = await prisma.persona.findMany({
+                where: {
+                    correo,
+                    tipoPersona: 'E'
+                }
+            });
+            return estudiante;
+        } catch (error) {
+            throw new Error(`No se pudieron obtener estudiantes por correo electrónico: ${error.message}`);
+        }
+    }
+
+    async getPersonasPorActividadYAsignatura(actividadId, asignaturaId) {
+        try {
+          const personasConActividad = await prisma.$queryRaw`
+            SELECT
+              p.id as personaID,
+              ac.id as IdActividad,
+              a.id as idAsignatura,
+              ac.titulo as actividadEducativaTitulo
+            FROM persona as p
+            INNER JOIN matricula as m ON p.id = m.idPersona
+            INNER JOIN grado as g ON m.idGrado = g.id
+            INNER JOIN asignatura as a ON g.id = a.idGrado
+            INNER JOIN actividadeseducativas as ac ON a.id = ac.asignaturaId
+            WHERE p.tipoPersona = 'E' AND ac.id = ${actividadId} AND a.id = ${asignaturaId}
+            GROUP BY p.id, ac.id, a.id;
+          `;
+    
+          return personasConActividad;
+        } catch (error) {
+          throw new Error(`No se pudieron obtener personas con actividad y asignatura: ${error.message}`);
+        }
+      }
 }
 
 module.exports = new EstudianteService();

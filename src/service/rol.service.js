@@ -24,19 +24,5 @@ class RolService{
             throw new Error(`No se puede agregar un estudiante: ${error.message}`)
         }
     }
-    async update(id,{nombreRol, estado}){
-        try {
-            const rol = await prisma.rol.update({
-                where: { id },
-                data: {
-                    nombreRol,
-                    estado
-                }
-            });
-            return rol;
-        } catch (error) {
-            throw new Error(`No se puede actualizar el rol: ${error.message}`)
-        }
-    }
 }
 module.exports = new RolService();

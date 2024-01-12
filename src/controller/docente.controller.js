@@ -22,8 +22,37 @@ class DocenteController {
             res.status(500).json({ error: error.message });
           }
     }
+
+    async getTeacherByCorreo(req, res) {
+      try {
+        const { correo } = req.params;
+        const docente = await docenteService.getTeacherByCorreo(correo);
+        if (docente) {
+          res.json(docente);
+        } else {
+          res.status(404).json({ error: 'Docente no encontrada' });
+        }
+      } catch (error) {
+        res.status(500).json({ error: error.message });
+      }
+    }
+      
+  async getTeacherByCelular(req, res) {
+    try {
+      const { celular } = req.params;
+      const docente = await docenteService.getTeacherByCelular(celular);
+      if (docente) {
+        res.json(docente);
+      } else {
+        res.status(404).json({ error: 'Docente no encontrada' });
+      }
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
     async createTeacher(req, res) {
         try {
+          
             const { nombre, apellido, cedula, fechaNacimiento, direccion, correo, celular, tipoPersona } = req.body;
             const docente = await docenteService.createTeacher({ nombre, apellido, cedula, fechaNacimiento, direccion, correo, celular, tipoPersona: tipoPersona || 'D' });
             if (docente) {
