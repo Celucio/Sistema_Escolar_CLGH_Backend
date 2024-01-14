@@ -14,5 +14,6 @@ router.post('/grado/', gradoController.create);
 router.put('/grado/:id', gradoController.update);
 
 router.get('/grado/gradosNoAsignados', gradoController.getGradosNoAsignados);
+router.get('/grado/traer/:id', gradoController.getById);
 
 module.exports = router;

@@ -32,6 +32,7 @@ router.post('/docente/', docenteController.createTeacher);
 
 //Actualizar el docente por id
 router.put('/docente/:id',docenteController.updateTeacher);
+router.get('/docentes/traer/:id', docenteController.getTeacherById);
 
 router.get('/docente/correo/:correo', docenteController.getTeacherByCorreo);
 //Obtener estudiante por cedula

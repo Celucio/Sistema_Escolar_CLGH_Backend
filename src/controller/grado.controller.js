@@ -48,6 +48,15 @@ class GradoController {
             res.status(500).json({ error: error.message });
         }
     }
+    async getById(req, res) {
+        try {
+            const { id } = req.params;
+            const grado = await gradoService.getById(id);
+            res.json(grado);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
 
 }
 module.exports = new GradoController();

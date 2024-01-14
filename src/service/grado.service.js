@@ -74,6 +74,31 @@ class GradoService {
             throw new Error(`No se pudieron obtener los grados no asignados: ${error.message}`);
         }
     }
+    async getById(id) {
+        try {
+            const grado = await prisma.grado.findUnique({
+                where: {
+                    id: parseInt(id) // Convertir id a entero
+                },
+                include: {
+                    persona: {
+                        select: {
+                            nombre: true,
+                            apellido: true
+                        }
+                    }
+                }
+            });
+
+            if (!grado) {
+                throw new Error('No se encontró el grado con el ID proporcionado.');
+            }
+
+            return grado;
+        } catch (error) {
+            throw new Error(`No se pudo obtener el grado por ID: ${error.message}`);
+        }
+    }
 }
 
 module.exports = new GradoService();
