@@ -58,7 +58,7 @@ class DocenteService {
         try {
             // Verificar si ya existe un estudiante con la misma cédula
             const existingTeacher = await this.getTeacherByCi(cedula);
-
+    
             if (existingTeacher.length > 0) {
                 throw new Error('Ya existe un docente con esta cédula.');
             }
@@ -67,12 +67,12 @@ class DocenteService {
             const existingTeacherByCorreo = await this.getTeacherByCelular(correo);
             if (existingTeacherByCorreo.length > 0) {
                 throw new Error('Ya existe un docente con este correo electrónico.');
-            }
+            }  
             // Verificar si ya existe un estudiante con el mismo número de teléfono
             const existingTeacherByCelular = await this.getTeacherByCelular(celular);
             if (existingTeacherByCelular.length > 0) {
-                throw new Error('Ya existe un estudiante con este número de teléfono.');
-            }
+            throw new Error('Ya existe un estudiante con este número de teléfono.');
+            }    
             const fechaNacimientoDate = new Date(fechaNacimiento);
             if (isNaN(fechaNacimientoDate.getTime())) {
                 throw new Error('Fecha de nacimiento no válida.');
@@ -132,8 +132,6 @@ class DocenteService {
             throw new Error(`No se pudo obtener el docente por ID: ${error.message}`);
         }
     }
-
-
 }
 
 module.exports = new DocenteService();

@@ -124,15 +124,18 @@ class EstudianteService {
         try {
           const personasConActividad = await prisma.$queryRaw`
             SELECT
-              p.id as personaID,
+              p.*,
               ac.id as IdActividad,
               a.id as idAsignatura,
-              ac.titulo as actividadEducativaTitulo
+              ac.titulo as actividadEducativaTitulo,
+              n.valor_nota as nota,
+              n.id as id_nota
             FROM persona as p
             INNER JOIN matricula as m ON p.id = m.idPersona
             INNER JOIN grado as g ON m.idGrado = g.id
             INNER JOIN asignatura as a ON g.id = a.idGrado
             INNER JOIN actividadeseducativas as ac ON a.id = ac.asignaturaId
+            LEFT JOIN act_est_notas as n ON ac.id = n.actId
             WHERE p.tipoPersona = 'E' AND ac.id = ${actividadId} AND a.id = ${asignaturaId}
             GROUP BY p.id, ac.id, a.id;
           `;
@@ -142,6 +145,20 @@ class EstudianteService {
           throw new Error(`No se pudieron obtener personas con actividad y asignatura: ${error.message}`);
         }
       }
+      async getStudentById(id) {
+        try {
+          const estudiante = await prisma.persona.findUnique({
+            where: {
+              id: parseInt(id, 10), // Convertir a número si es un string
+              tipoPersona: 'E'
+            }
+          });
+          return estudiante;
+        } catch (error) {
+          throw new Error(`No se pudieron obtener detalles del estudiante: ${error.message}`);
+        }
+      }
+      
 }
 
 module.exports = new EstudianteService();

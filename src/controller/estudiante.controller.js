@@ -90,6 +90,22 @@ class EstudianteController {
       res.status(500).json({ error: error.message });
     }
   }
+
+  async getStudentById(req, res) {
+    try {
+      const { id } = req.params;
+      //console.log("ID recibido:", id); // Agrega este log
+      const estudiante = await estudianteService.getStudentById(id);
+      if (estudiante) {
+        res.json(estudiante);
+      } else {
+        res.status(404).json({ error: 'Estudiante no encontrado' });
+      }
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+  
   
 }
 

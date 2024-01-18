@@ -15,4 +15,13 @@ router.get('/notas/:id', notasController.notasEstudiante);
 //Asignar nota a un estudiante
 router.put('/notas/:id', notasController.asignarNota);
 
+// Obtener notas por actividad y asignatura
+// En tu enrutador (router)
+router.get('/actividad/:actividadId/asignatura/:asignaturaId', notasController.getAllByActividadYAsignatura);
+
+// Obtener todas las notas
+//router.get('/all-notas', notasController.getAllNotas);
+router.get('/traernotas', notasController.obtenerNotasPorActividadYAsignatura);
+
+
 module.exports = router;

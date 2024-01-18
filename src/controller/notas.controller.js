@@ -46,6 +46,28 @@ class NotasController {
             res.status(500).json({ error: error.message });
         }
     }
+
+    async getAllByActividadYAsignatura(req, res) {
+        try {
+            const { actividadId, asignaturaId } = req.params;
+            const notas = await notaService.getAllByActividadYAsignatura(parseInt(actividadId, 10), parseInt(asignaturaId, 10));
+            res.json(notas);
+        } catch (error) {
+            console.error("Error al obtener las notas por actividad y asignatura:", error);
+            res.status(500).json({ error: `No se pudieron obtener las notas. Detalles: ${error.message}` });
+        }
+    }
+    async obtenerNotasPorActividadYAsignatura(req, res) {
+        try {
+            const { actividadId, asignaturaId } = req.query;
+            const notas = await notaService.getAllNotas(actividadId, asignaturaId);
+            res.json(notas);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
+    
 }
+    
 
 module.exports = new NotasController();

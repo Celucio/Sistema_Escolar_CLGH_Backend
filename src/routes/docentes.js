@@ -32,7 +32,6 @@ router.post('/docente/', docenteController.createTeacher);
 
 //Actualizar el docente por id
 router.put('/docente/:id',docenteController.updateTeacher);
-router.get('/docentes/traer/:id', docenteController.getTeacherById);
 
 router.get('/docente/correo/:correo', docenteController.getTeacherByCorreo);
 //Obtener estudiante por cedula
@@ -41,5 +40,7 @@ router.get('/docente/cedula/:cedula', docenteController.getTeacherByCi);
 //obtener estudiante por celular
 router.get('/docente/celular/:celular', docenteController.getTeacherByCelular);
 
+// Ruta para obtener un docente por ID
+router.get('/docentes/traer/:id', docenteController.getTeacherById);
 
 module.exports = router;

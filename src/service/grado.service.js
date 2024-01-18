@@ -7,9 +7,9 @@ class GradoService {
     async getAll() {
         try {
             const grados = await prisma.grado.findMany({
-                include: {
-                    persona: {
-                        select: {
+                include:{
+                    persona:{
+                        select:{
                             nombre: true,
                             apellido: true
                         }
@@ -21,7 +21,7 @@ class GradoService {
             throw new Error(`No se pudieron obtener todos los grados: ${error.message}`);
         }
     }
-
+  
     async create({ nombreGrado, persId }) {
         try {
             persId = parseInt(persId); // Convertir persId a entero
@@ -36,16 +36,16 @@ class GradoService {
             }
             return prisma.grado.create({
                 data: {
-                    nombreGrado,
-                    persId
+                  nombreGrado,
+                  persId
                 }
-            });
+              });
         } catch (error) {
             throw new Error(`${error.message}`)
         }
     }
 
-    async update(id, { nombreGrado, persId }) {
+    async update(id, {nombreGrado, persId}) {
         try {
             const es = await prisma.grado.update({
                 where: {
@@ -61,6 +61,7 @@ class GradoService {
             throw new Error(`No se puede actualizar el grado: ${error.message}`)
         }
     }
+
     async getGradosNoAsignados() {
         try {
             const gradosNoAsignados = await prisma.$queryRaw`

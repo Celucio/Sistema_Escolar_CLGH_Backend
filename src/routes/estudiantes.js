@@ -22,7 +22,8 @@ router.post('/estudiante/', estudianteController.createStudent);
 //Actualizar un estudiante por id
 router.put('/estudiante/:id', estudianteController.updateStudent);
 
-//traerPersonasPorActividadyAsignatrua
+//consultar todos los estudiantes de la tabla
+router.get('/estudiante/traer/:id', estudianteController.getStudentById);
 
 
 module.exports = router;

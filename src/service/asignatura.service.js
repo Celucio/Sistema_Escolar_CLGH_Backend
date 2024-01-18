@@ -67,20 +67,25 @@ class AsignaturaService {
                 include: {
                     grado: {
                         select: {
+                            id: true,  // Agrega el id del grado a la selección
                             nombreGrado: true
                         }
                     }
                 }
             });
             return asignaturas.map(asignatura => ({
+                idAsignatura: asignatura.id,  // Agrega el id de la asignatura
                 nombreMateria: asignatura.nombreMateria,
+                idGrado: asignatura.grado.id,  // Agrega el id del grado
                 nombreGrado: asignatura.grado.nombreGrado,
-                estadoMateria : asignatura.estado
+                estadoMateria: asignatura.estado
             }));
         } catch (error) {
             throw new Error(`No se pudieron obtener todas las asignaturas con grado: ${error.message}`);
         }
     }
+
+    
 
 }
 
