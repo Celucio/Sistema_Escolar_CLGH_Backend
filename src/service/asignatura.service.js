@@ -84,6 +84,23 @@ class AsignaturaService {
             throw new Error(`No se pudieron obtener todas las asignaturas con grado: ${error.message}`);
         }
     }
+    async asignaturaPorGrado(id) {
+        try {
+            const asignaturas = await prisma.asignatura.findMany({
+                where: { idGrado: id },
+                include:{
+                    grado:{
+                        select:{
+                            nombreGrado: true
+                        }
+                    }
+                }
+            });
+            return asignaturas;
+        } catch (error) {
+            throw new Error(`No se pudo obtener la asignatura por ID: ${error.message}`);
+        }
+    }
 
     
 

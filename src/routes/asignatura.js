@@ -18,5 +18,6 @@ router.put('/asignatura/:id', asignaturaController.update);
 // Ejemplo de cómo usar la respuesta en tu ruta o controlador
 router.get('/asignaturaWithGrado', asignaturaController.getAllAsignaturasWithGrado);
 // Obtener grados no asignados
-
+//Obtener asignaturas por grado
+router.get('/asignatura/grado/:id', asignaturaController.asignaturaPorGrado);
 module.exports = router;

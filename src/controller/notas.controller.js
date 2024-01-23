@@ -59,8 +59,8 @@ class NotasController {
     }
     async obtenerNotasPorActividadYAsignatura(req, res) {
         try {
-            const { actividadId, asignaturaId } = req.query;
-            const notas = await notaService.getAllNotas(actividadId, asignaturaId);
+            const { actividadId, asignaturaId, gradoId } = req.query;
+            const notas = await notaService.getAllNotas(actividadId, asignaturaId, gradoId);
             res.json(notas);
         } catch (error) {
             res.status(500).json({ error: error.message });

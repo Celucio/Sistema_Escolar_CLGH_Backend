@@ -75,6 +75,22 @@ class MatriculaService {
             throw new Error(`No se puede agregar la matricula: ${error.message}`)
         }
     }
+    async update(id, { estado, idPersona, idPeriodo, idGrado }) {
+        try {
+            const matricula = await prisma.matricula.update({
+                where: { id },
+                data: {
+                    estado,
+                    idPersona,
+                    idPeriodo,
+                    idGrado
+                }
+            });
+            return matricula;
+        } catch (error) {
+            throw new Error(`No se puede actualizar una matricula: ${error.message}`);
+        }
+    }
 }
 
 module.exports = new MatriculaService();

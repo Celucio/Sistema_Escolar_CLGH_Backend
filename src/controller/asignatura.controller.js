@@ -59,6 +59,19 @@ class AsignaturaController {
             res.status(500).json({ error: error.message });
         }
     }
+    async asignaturaPorGrado(req, res) {
+        try {
+            const { id } = req.params;
+            const asignaturas = await asignaturaService.asignaturaPorGrado(parseInt(id, 10));
+            if (asignaturas) {
+                res.json(asignaturas);
+            } else {
+                res.status(404).json({ error: 'Asignatura no encontrada' });
+            }
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
   
 
     

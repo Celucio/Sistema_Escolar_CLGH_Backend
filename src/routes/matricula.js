@@ -13,4 +13,6 @@ router.post('/matricula/', matriculaController.create);
 //Obtener matricula por id
 router.get('/matricula/:id', matriculaController.getById);
 
+router.put('/matricula/:id', matriculaController.update);
+
 module.exports = router;

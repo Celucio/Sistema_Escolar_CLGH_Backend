@@ -49,18 +49,7 @@ class EstudianteService {
     
             if (existingStudent.length > 0) {
                 throw new Error('Ya existe un estudiante con esta cédula.');
-            }
-
-            // Verificar si ya existe un estudiante con el mismo correo electrónico
-            const existingStudentByCorreo = await this.getStudentByCorreo(correo);
-            if (existingStudentByCorreo.length > 0) {
-                throw new Error('Ya existe un estudiante con este correo electrónico.');
-            }  
-            // Verificar si ya existe un estudiante con el mismo número de teléfono
-            const existingStudentByCelular = await this.getStudentByCelular(celular);
-            if (existingStudentByCelular.length > 0) {
-            throw new Error('Ya existe un estudiante con este número de teléfono.');
-            }    
+            }   
     
             const fechaNacimientoDate = new Date(fechaNacimiento);
             if (isNaN(fechaNacimientoDate.getTime())) {
