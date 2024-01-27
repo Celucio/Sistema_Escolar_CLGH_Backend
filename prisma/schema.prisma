@@ -21,6 +21,22 @@ enum Estado {
   I
 }
 
+enum NombrePeriodo {
+  P
+  S
+  T
+}
+
+enum NombreGrado {
+  P
+  S
+  T
+  C
+  Q
+  X
+  M
+}
+
 model Rol {
   id          Int          @id @default(autoincrement())
   nombreRol   String
@@ -32,10 +48,10 @@ model Persona {
   id              Int             @id @default(autoincrement())
   nombre          String
   apellido        String
-  cedula          String
+  cedula          String          @unique
   fechaNacimiento DateTime
   direccion       String
-  correo          String
+  correo          String  
   celular         String
   tipoPersona     TipoPersona
   roles           PersonaRol[]
@@ -43,6 +59,8 @@ model Persona {
   notas           Act_Est_Notas[]
   Grado           Grado?
 }
+
+
 
 model PersonaRol {
   id        Int     @id @default(autoincrement())
@@ -55,14 +73,14 @@ model PersonaRol {
 
 model Periodo {
   id          Int         @id @default(autoincrement())
-  anioLectivo String
-  estado      String
+  anioLectivo String @unique
+  estado      Estado
   matricula   Matricula[]
 }
 
 model Grado {
   id          Int          @id @default(autoincrement())
-  nombreGrado String
+  nombreGrado NombreGrado  @unique
   asignatura  Asignatura[]
   matriculaId Matricula[]
   persona     Persona      @relation(fields: [persId], references: [id])
@@ -81,10 +99,10 @@ model Matricula {
 }
 
 model PeriodoCalificaciones {
-  id                 Int                     @id @default(autoincrement())
-  nombrePeriodo      String
-  estado             String
-  actividadEducativa ActividadesEducativas[]
+  id                  Int                     @id @default(autoincrement())
+  nombrePeriodo       NombrePeriodo           @unique
+  estado              Estado
+  actividadEducativa  ActividadesEducativas[]
 }
 
 model TipoActividad {
@@ -106,7 +124,7 @@ model ActividadesEducativas {
   perCalId              Int
   asignatura            Asignatura            @relation(fields: [asignaturaId], references: [id])
   asignaturaId          Int
-  estado                String
+  estado                Estado
   notas                 Act_Est_Notas[]
 }
 
