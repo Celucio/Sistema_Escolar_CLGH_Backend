@@ -51,16 +51,22 @@ model Persona {
   cedula          String          @unique
   fechaNacimiento DateTime
   direccion       String
-  correo          String  
+  correo          String
   celular         String
   tipoPersona     TipoPersona
   roles           PersonaRol[]
   matricula       Matricula[]
   notas           Act_Est_Notas[]
   Grado           Grado?
+  usuario         Usuario?
 }
 
-
+model Usuario {
+  id         Int      @id @default(autoincrement()) 
+  contrasena String
+  persona    Persona? @relation(fields: [personaId], references: [id])
+  personaId  Int? @unique
+}
 
 model PersonaRol {
   id        Int     @id @default(autoincrement())

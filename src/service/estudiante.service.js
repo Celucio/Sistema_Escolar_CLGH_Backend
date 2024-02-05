@@ -1,4 +1,6 @@
 const { PrismaClient } = require('@prisma/client')
+const bcrypt = require('bcrypt');
+const UsuarioService = require('./usuario.service'); 
 
 const prisma = new PrismaClient();
 
@@ -28,7 +30,7 @@ class EstudianteService {
             throw new Error(`No se pudieron obtener el docente por Cédula: ${error.message}`);
         }
     }
-    
+
     async getStudentByCelular(celular) {
         try {
             const estudiante = await prisma.persona.findMany({
@@ -46,18 +48,18 @@ class EstudianteService {
         try {
             // Verificar si ya existe un estudiante con la misma cédula
             const existingStudent = await this.getStudentByCi(cedula);
-    
+
             if (existingStudent.length > 0) {
                 throw new Error('Ya existe un estudiante con esta cédula.');
-            }   
-    
+            }
+
             const fechaNacimientoDate = new Date(fechaNacimiento);
             if (isNaN(fechaNacimientoDate.getTime())) {
                 throw new Error('Fecha de nacimiento no válida.');
             }
-            
+
             const fechaNacimientoISO = fechaNacimientoDate.toISOString();
-            
+
             const es = await prisma.persona.create({
                 data: {
                     nombre,
@@ -70,13 +72,18 @@ class EstudianteService {
                     tipoPersona
                 }
             });
-    
+            // Crear el usuario con la contraseña igual a la cédula
+            await UsuarioService.registrarUsuario({
+                cedula,
+                personaId: es.id
+            });
             return es;
+
         } catch (error) {
             throw new Error(`No se puede agregar un estudiante: ${error.message}`)
         }
     }
-    
+
     async updateStudent(id, { nombre, apellido, direccion, correo, celular }) {
         try {
             const es = await prisma.persona.update({
@@ -111,7 +118,7 @@ class EstudianteService {
 
     async getPersonasPorActividadYAsignatura(actividadId, asignaturaId) {
         try {
-          const personasConActividad = await prisma.$queryRaw`
+            const personasConActividad = await prisma.$queryRaw`
             SELECT
               p.*,
               ac.id as IdActividad,
@@ -128,26 +135,26 @@ class EstudianteService {
             WHERE p.tipoPersona = 'E' AND ac.id = ${actividadId} AND a.id = ${asignaturaId}
             GROUP BY p.id, ac.id, a.id;
           `;
-    
-          return personasConActividad;
+
+            return personasConActividad;
         } catch (error) {
-          throw new Error(`No se pudieron obtener personas con actividad y asignatura: ${error.message}`);
+            throw new Error(`No se pudieron obtener personas con actividad y asignatura: ${error.message}`);
         }
-      }
-      async getStudentById(id) {
+    }
+    async getStudentById(id) {
         try {
-          const estudiante = await prisma.persona.findUnique({
-            where: {
-              id: parseInt(id, 10), // Convertir a número si es un string
-              tipoPersona: 'E'
-            }
-          });
-          return estudiante;
+            const estudiante = await prisma.persona.findUnique({
+                where: {
+                    id: parseInt(id, 10), // Convertir a número si es un string
+                    tipoPersona: 'E'
+                }
+            });
+            return estudiante;
         } catch (error) {
-          throw new Error(`No se pudieron obtener detalles del estudiante: ${error.message}`);
+            throw new Error(`No se pudieron obtener detalles del estudiante: ${error.message}`);
         }
-      }
-      
+    }
+
 }
 
 module.exports = new EstudianteService();
