@@ -1,4 +1,6 @@
-const { PrismaClient } = require('@prisma/client')
+const { PrismaClient } = require('@prisma/client');
+const bcrypt = require('bcrypt');
+const UsuarioService = require('./usuario.service'); 
 
 const prisma = new PrismaClient();
 
@@ -90,6 +92,11 @@ class DocenteService {
                     celular,
                     tipoPersona
                 }
+            });
+              // Crear el usuario con la contraseña igual a la cédula
+              await UsuarioService.registrarUsuario({
+                cedula,
+                personaId: es.id
             });
             return es;
         } catch (error) {
