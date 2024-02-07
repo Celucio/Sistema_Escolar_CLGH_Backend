@@ -66,6 +66,7 @@ model Usuario {
   contrasena String
   persona    Persona? @relation(fields: [personaId], references: [id])
   personaId  Int? @unique
+  primerInicioSesion  Boolean          @default(true)
 }
 
 model PersonaRol {
