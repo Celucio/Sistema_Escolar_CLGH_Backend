@@ -43,21 +43,21 @@ class NotaService {
                 where: { id: asignaturaId },
                 select: { idGrado: true }
             });
-    
+
             const idGrado = asignatura.idGrado;
-    
+
             // Filtrar matriculas por ese grado
             const estudiantes = await prisma.matricula.findMany({
                 where: { idGrado },
                 include: { persona: true }
             });
-    
+
             const actividades = await prisma.actividadesEducativas.findMany({
                 where: { asignaturaId }
             });
-    
+
             const notasCreadas = [];
-    
+
             // Crear notas para cada estudiante y actividad
             for (let estudiante of estudiantes) {
                 for (let actividad of actividades) {
@@ -68,7 +68,7 @@ class NotaService {
                             actId: actividad.id
                         }
                     });
-            
+
                     if (!notaExistente) {
                         const nuevaNota = await prisma.act_Est_Notas.create({
                             data: {
@@ -77,14 +77,14 @@ class NotaService {
                                 valor_nota: 0
                             }
                         });
-            
+
                         notasCreadas.push(nuevaNota);
                     } else {
                         console.log(`Ya existe una nota para estudiante ${estudiante.idPersona} y actividad ${actividad.id}`);
                     }
                 }
             }
-    
+
             return notasCreadas;
         } catch (error) {
             throw new Error(`No se pudieron obtener todas las notas: ${error.message}`);
@@ -145,7 +145,7 @@ class NotaService {
             if (!actividadId || !asignaturaId) {
                 throw new Error("Los parámetros de la URL son inválidos.");
             }
-    
+
             const notas = await prisma.act_Est_Notas.findMany({
                 where: {
                     actId: actividadId,
@@ -174,7 +174,7 @@ class NotaService {
                     }
                 }
             });
-    
+
             return notas;
         } catch (error) {
             console.error("Error al obtener las notas por actividad y asignatura:", error);
@@ -182,55 +182,7 @@ class NotaService {
         }
     }
 
-    
-    // async getAllNotas(actividadId, asignaturaId) {
-    //     try {
-    //         const filtro = {
-    //             include: {
-    //                 persona: true,
-    //                 actividades: {
-    //                     include: {
-    //                         asignatura: true
-    //                     }
-    //                 }
-    //             },
-    //             where: {}
-    //         };
-    
-    //         // Agregar condiciones si se proporcionan los parámetros
-    //         if (actividadId) filtro.where.actId = parseInt(actividadId);
-    //         if (asignaturaId) filtro.where = {
-    //             ...filtro.where,
-    //             'actividades': {
-    //                 'asignatura': {
-    //                     'id': parseInt(asignaturaId)
-    //                 }
-    //             }
-    //         };
-    
-    //         const notas = await prisma.act_Est_Notas.findMany(filtro);
-    
-    //         //console.log('Notas obtenidas:', notas);
-    
-    //         return notas.map(nota => {
-    //             //console.log('Nota actual:', nota);
-    
-    //             return {
-    //                 nombre: nota.persona.nombre,
-    //                 apellido: nota.persona.apellido,
-    //                 tituloActividad: nota.actividades.titulo,
-    //                 nombreAsignatura: nota.actividades.asignatura.nombreMateria,
-    //                 nota: nota.valor_nota,
-    //                 idNota: nota.id
-    //             };
-    //         });
-    //     } catch (error) {
-    //         console.error('Error al obtener todas las notas:', error.message);
-    //         throw new Error(`No se pudieron obtener todas las notas: ${error.message}`);
-    //     }
-    // }
-
-    async getAllNotas(actividadId, asignaturaId, gradoId ) {
+    async getAllNotas(actividadId, asignaturaId, gradoId) {
         try {
             const filtro = {
                 include: {
@@ -243,7 +195,7 @@ class NotaService {
                 },
                 where: {}
             };
-    
+
             // Agregar condiciones si se proporcionan los parámetros
             if (actividadId) filtro.where.actId = parseInt(actividadId);
             if (asignaturaId) filtro.where = {
@@ -264,9 +216,9 @@ class NotaService {
                     }
                 }
             };
-    
+
             const notas = await prisma.act_Est_Notas.findMany(filtro);
-    
+
             return notas.map(nota => {
                 return {
                     nombre: nota.persona.nombre,
@@ -282,28 +234,23 @@ class NotaService {
             throw new Error(`No se pudieron obtener todas las notas: ${error.message}`);
         }
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    async obtenerNotasEstudiante(idEstudiante, idAsignatura) {
+        try {
+            const notas = await prisma.$queryRaw`
+            SELECT aen.id, ae.titulo, ae.detalleActividad, aen.valor_nota
+            FROM Act_Est_Notas aen
+            JOIN ActividadesEducativas ae ON aen.actId = ae.id
+            WHERE aen.personaId = ${parseInt(idEstudiante)} AND ae.asignaturaId = ${parseInt(idAsignatura)};
+            `
+            if (!notas) {
+                throw new Error(`No se encontraron notas para el estudiante con ID ${ idEstudiante } y la asignatura con ID ${ idAsignatura }`);
+            }
 
-
-    
-
-
+            return notas;
+        } catch (error) {
+            throw new Error(`No se pudieron obtener todas las notas: ${ error.message }`);
+        }
+    }
 
 }
 

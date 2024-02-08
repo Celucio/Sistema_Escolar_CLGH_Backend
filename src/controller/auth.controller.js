@@ -1,10 +1,25 @@
 const authService = require('../service/authService');
-const handleSuccessfulLogin = (req, res) => {
-  // Proceso de autenticación exitoso
-  const token = authService.generarToken(); // Puedes usar tu lógica para generar el token
-  const redireccion = '/ruta-de-redireccion';
+const handleSuccessfulLogin = async (req, res) => {
+  try {
+    const { cedula, contrasena } = req.body;
 
-  res.json({ mensaje: 'Inicio de sesión exitoso', token, redireccion });
+    // Lógica de autenticación con authService.login
+    const { token, mensaje, primerInicioSesion } = await authService.login(cedula, contrasena);
+
+    if (primerInicioSesion) {
+      return res.status(200).json({ mensaje, primerInicioSesion });
+    }
+
+    // Obtén el ID del estudiante después de la autenticación
+    const estudiante = await estudianteService.getEstudianteByCedula(cedula);
+    const idEstudiante = estudiante.id;
+
+    // Redirige a la ruta deseada incluyendo el ID del estudiante en los parámetros de la URL
+    res.redirect('/vista-estudiante?idEstudiante=${idEstudiante}');
+  } catch (error) {
+    console.error('Error en el controlador de inicio de sesión:', error);
+    return res.status(401).json({ mensaje: 'Credenciales incorrectas' });
+  }
 };
 
 const login = async (req, res) => {
@@ -27,7 +42,6 @@ const login = async (req, res) => {
 const cambiarContrasena = async (req, res) => {
   try {
     const { cedula, nuevaContrasena } = req.body;
-
     // Verificar si es el primer inicio de sesión
     const primerInicioSesion = await authService.primerInicioSesion(cedula);
 

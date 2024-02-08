@@ -20,4 +20,6 @@ router.get('/asignaturaWithGrado', asignaturaController.getAllAsignaturasWithGra
 // Obtener grados no asignados
 //Obtener asignaturas por grado
 router.get('/asignatura/grado/:id', asignaturaController.asignaturaPorGrado);
+router.post('/validarAsignaturaPorGrado', asignaturaController.validarAsignaturaPorGrado);
+
 module.exports = router;

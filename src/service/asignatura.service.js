@@ -28,18 +28,43 @@ class AsignaturaService {
             throw new Error(`No se pudo obtener la asignatura por ID: ${error.message}`);
         }
     }
-    async createAsignature({ nombreMateria, estado, idGrado}) {
+    async createAsignature({ nombreMateria, estado, idGrado }) {
         try {
-            const es = await prisma.asignatura.create({
+            // Validar si la asignatura ya existe en el grado antes de crearla
+            await this.validarAsignaturaPorGrado(nombreMateria, idGrado);
+    
+            // Crear la asignatura si la validación es exitosa
+            const nuevaAsignatura = await prisma.asignatura.create({
                 data: {
                     nombreMateria,
                     estado,
-                    idGrado : parseInt(idGrado, 10)
+                    idGrado: parseInt(idGrado, 10)
                 }
             });
-            return es;
+    
+            return nuevaAsignatura;
         } catch (error) {
-            throw new Error(`No se puede agregar una asignatura: ${error.message}`)
+            throw new Error(`No se puede agregar una asignatura: ${error.message}`);
+        }
+    }
+    
+    async validarAsignaturaPorGrado(nombreMateria, idGrado) {
+        try {
+            const asignaturaExistente = await prisma.asignatura.findFirst({
+                where: {
+                    nombreMateria,
+                    idGrado
+                }
+            });
+
+            if (asignaturaExistente) {
+                throw new Error(`La asignatura '${nombreMateria}' ya existe en el grado con ID '${idGrado}'.`);
+            }
+
+            // Si no hay asignatura existente con el mismo nombre en el mismo grado, la validación es exitosa.
+            return true;
+        } catch (error) {
+            throw new Error(`Error al validar asignatura por grado: ${error.message}`);
         }
     }
 

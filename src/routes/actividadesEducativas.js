@@ -19,5 +19,7 @@ router.put('/actividades/:id', actividadController.update);
 router.get('/actividades/periodo/:id', actividadController.actividadesPorPeriodoCalificaciones);
 router.get('/actividades/porAsignatura/:asignaturaId', actividadController.actividadesPorAsignatura);
 
+//Obtener actividades por asignatura
+router.get('/actividades/asignatura/:asignaturaId', actividadController.actividadesPorAsignatura);
 
 module.exports = router;

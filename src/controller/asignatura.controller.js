@@ -72,6 +72,26 @@ class AsignaturaController {
             res.status(500).json({ error: error.message });
         }
     }
+
+    async validarAsignaturaPorGrado(req, res) {
+        try {
+            const { nombreMateria, idGrado } = req.body;
+
+            // Llamada directa a la función validarAsignaturaPorGrado
+            const validacionExitosa = await validarAsignaturaPorGrado(nombreMateria, idGrado);
+
+            if (!validacionExitosa) {
+                return res.status(400).json({ error: `La asignatura '${nombreMateria}' ya existe en el grado con ID '${idGrado}'.` });
+            }
+
+            res.json({ mensaje: 'Validación exitosa' });
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
+
+
+   
   
 
     

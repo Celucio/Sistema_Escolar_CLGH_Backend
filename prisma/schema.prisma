@@ -39,10 +39,12 @@ enum NombreGrado {
 
 model Rol {
   id          Int          @id @default(autoincrement())
-  nombreRol   String
+  nombreRol   TipoPersona  @unique
   estado      Estado
   Persona_Rol PersonaRol[]
 }
+
+
 
 model Persona {
   id              Int             @id @default(autoincrement())
@@ -51,16 +53,15 @@ model Persona {
   cedula          String          @unique
   fechaNacimiento DateTime
   direccion       String
-  correo          String
+  correo          String  
   celular         String
   tipoPersona     TipoPersona
   roles           PersonaRol[]
   matricula       Matricula[]
   notas           Act_Est_Notas[]
   Grado           Grado?
-  usuario         Usuario?
+  Usuario         Usuario?
 }
-
 model Usuario {
   id         Int      @id @default(autoincrement()) 
   contrasena String
@@ -68,6 +69,7 @@ model Usuario {
   personaId  Int? @unique
   primerInicioSesion  Boolean          @default(true)
 }
+
 
 model PersonaRol {
   id        Int     @id @default(autoincrement())
@@ -123,8 +125,7 @@ model ActividadesEducativas {
   id                    Int                   @id @default(autoincrement())
   titulo                String
   detalleActividad      String
-  fechaInicio           DateTime              
-  fechaFin              DateTime              
+  fechaInicio           DateTime                          
   tipoActividad         TipoActividad         @relation(fields: [tipoActId], references: [id])
   tipoActId             Int
   periodoCalificaciones PeriodoCalificaciones @relation(fields: [perCalId], references: [id])

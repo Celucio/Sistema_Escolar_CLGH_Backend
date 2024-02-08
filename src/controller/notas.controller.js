@@ -66,8 +66,15 @@ class NotasController {
             res.status(500).json({ error: error.message });
         }
     }
-    
+    async obtenerNotasEstudiante(req, res) {
+        try {
+            const { idEstudiante, idAsignatura } = req.query;
+            const notas = await notaService.obtenerNotasEstudiante(idEstudiante, idAsignatura);
+            res.json(notas);
+        } catch (error) {
+            throw new Error(`No se pudieron obtener las notas del estudiante: ${error.message}`);
+        }
+    }
 }
-    
 
 module.exports = new NotasController();

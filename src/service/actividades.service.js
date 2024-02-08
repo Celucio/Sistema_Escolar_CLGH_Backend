@@ -40,21 +40,18 @@ class ActividadService {
             throw new Error(`No se puede actualizar: ${error.message}`);
         }
     }
-    async create({ titulo, detalleActividad, fechaInicio, fechaFin, tipoActId, perCalId, asignaturaId, estado }) {
+    async create({ titulo, detalleActividad, fechaInicio,tipoActId, perCalId, asignaturaId, estado }) {
         try {
             const fechaI = new Date(fechaInicio);
-            const fechaF = new Date(fechaFin);
-            if (isNaN(fechaI&&fechaF.getTime())) {
+            if (isNaN(fechaI.getTime())) {
                 throw new Error('Fecha no válida.');
             }
             const fechaInISO = fechaI.toISOString();
-            const fechaFinISO = fechaF.toISOString();
             const act = await prisma.actividadesEducativas.create({
                 data: {
                     titulo,
                     detalleActividad,
                     fechaInicio:fechaInISO,
-                    fechaFin:fechaFinISO,
                     tipoActId,
                     perCalId,
                     asignaturaId,
@@ -66,23 +63,20 @@ class ActividadService {
             throw new Error(`No se puede actualizar: ${error.message}`);
         }
     }
-    async update(id, { titulo, detalleActividad, fechaInicio, fechaFin, tipoActId, perCalId, asignaturaId, estado }) {
+    async update(id, { titulo, detalleActividad, fechaInicio, tipoActId, perCalId, asignaturaId, estado }) {
 
         try {
             const fechaI = new Date(fechaInicio);
-            const fechaF = new Date(fechaFin);
-            if (isNaN(fechaI&&fechaF.getTime())) {
+            if (isNaN(fechaI.getTime())) {
                 throw new Error('Fecha no válida.');
             }
             const fechaInISO = fechaI.toISOString();
-            const fechaFinISO = fechaF.toISOString();
             const act = await prisma.actividadesEducativas.update({
                 where: { id },
                 data: {
                     titulo,
                     detalleActividad,
                     fechaInicio: fechaInISO,
-                    fechaFin: fechaFinISO,
                     tipoActId,
                     perCalId,
                     asignaturaId,
@@ -148,6 +142,30 @@ class ActividadService {
             return actividades;
         } catch (error) {
             throw new Error(`No se pueden obtener las actividades por asignatura: ${error.message}`);
+        }
+    }
+    async actividadesPorAsignatura(asignaturaId) {
+        try {
+            const actividades = await prisma.actividadesEducativas.findMany({
+                where: {
+                    asignaturaId: parseInt(asignaturaId)
+                },
+                include: {
+                    periodoCalificaciones: {
+                        select: {
+                            nombrePeriodo: true
+                        }
+                    },
+                    tipoActividad: {
+                        select: {
+                            nombreActividad: true
+                        }
+                    }
+                }
+            });
+            return actividades;
+        } catch (error) {
+            throw new Error(`No se pudieron obtener las actividades: ${error.message}`);
         }
     }
     
