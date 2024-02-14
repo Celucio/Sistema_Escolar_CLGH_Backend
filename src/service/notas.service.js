@@ -243,12 +243,29 @@ class NotaService {
             WHERE aen.personaId = ${parseInt(idEstudiante)} AND ae.asignaturaId = ${parseInt(idAsignatura)};
             `
             if (!notas) {
-                throw new Error(`No se encontraron notas para el estudiante con ID ${ idEstudiante } y la asignatura con ID ${ idAsignatura }`);
+                throw new Error(`No se encontraron notas para el estudiante con ID ${idEstudiante} y la asignatura con ID ${idAsignatura}`);
             }
 
             return notas;
         } catch (error) {
-            throw new Error(`No se pudieron obtener todas las notas: ${ error.message }`);
+            throw new Error(`No se pudieron obtener todas las notas: ${error.message}`);
+        }
+    }
+    async obtenerNotasEstudiante(idEstudiante, idAsignatura) {
+        try {
+            const notas = await prisma.$queryRaw`
+            SELECT aen.id, ae.titulo, ae.detalleActividad, aen.valor_nota
+            FROM Act_Est_Notas aen
+            JOIN ActividadesEducativas ae ON aen.actId = ae.id
+            WHERE aen.personaId = ${parseInt(idEstudiante)} AND ae.asignaturaId = ${parseInt(idAsignatura)};
+            `
+            if (!notas) {
+                throw new Error(`No se encontraron notas para el estudiante con ID ${idEstudiante} y la asignatura con ID ${idAsignatura}`);
+            }
+
+            return notas;
+        } catch (error) {
+            throw new Error(`No se pudieron obtener todas las notas: ${error.message}`);
         }
     }
 

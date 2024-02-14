@@ -144,6 +144,7 @@ class ActividadService {
             throw new Error(`No se pueden obtener las actividades por asignatura: ${error.message}`);
         }
     }
+    
     async actividadesPorAsignatura(asignaturaId) {
         try {
             const actividades = await prisma.actividadesEducativas.findMany({

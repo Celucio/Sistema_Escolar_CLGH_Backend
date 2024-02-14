@@ -24,4 +24,7 @@ router.get('/traernotas', notasController.obtenerNotasPorActividadYAsignatura);
 //Obtener actividades por asignatura
 router.get('/traeractividades/asignatura/estudiante/', notasController.obtenerNotasEstudiante);
 
+//Obtener actividades por asignatura
+router.get('/traeractividades/asignatura/estudiante/', notasController.obtenerNotasEstudiante);
+
 module.exports = router;
