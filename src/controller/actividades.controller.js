@@ -1,4 +1,4 @@
-var actividadService = require('../service/actividades.service.js');
+const actividadService = require('../service/actividades.service.js');
 
 class ActividadController{
     async getAll(req, res){
@@ -24,8 +24,8 @@ class ActividadController{
     }
     async create(req,res){
         try{
-            const {titulo,detalleActividad,fechaInicio,fechaFin,tipoActId,perCalId,asignaturaId,estado} = req.body;
-            const actividades = await actividadService.create({titulo,detalleActividad,fechaInicio,fechaFin, tipoActId, perCalId, asignaturaId,estado})
+            const {titulo,detalleActividad,fechaInicio,tipoActId,perCalId,asignaturaId,estado} = req.body;
+            const actividades = await actividadService.create({titulo,detalleActividad,fechaInicio, tipoActId, perCalId, asignaturaId,estado})
             if(actividades){
                 res.json(actividades);
             }else{
@@ -39,12 +39,11 @@ class ActividadController{
     async update(req,res){
         try{
             const {id} = req.params;
-            const {titulo,detalleActividad,fechaInicio,fechaFin,tipoActId,perCalId,asignaturaId,estado} = req.body;
+            const {titulo,detalleActividad,fechaInicio,tipoActId,perCalId,asignaturaId,estado} = req.body;
             const actividades = await actividadService.update(parseInt(id, 10),{
                 titulo,
                 detalleActividad,
                 fechaInicio,
-                fechaFin,
                 tipoActId,
                 perCalId,
                 asignaturaId,
@@ -55,10 +54,19 @@ class ActividadController{
             res.status(500).json({error: error.message})
         }
     }
+    async actividadesPorAsignatura(req,res){
+        try{
+            const {asignaturaId} = req.params;
+            const actividades = await actividadService.actividadesPorAsignatura(asignaturaId);
+            res.json(actividades);
+        }catch(error){
+            res.status(500).json({error: error.message})
+        }
+    }
     async actividadesPorPeriodoCalificaciones(req,res){
         try{
-            const {id} = req.params;
-            const actividades = await actividadService.actividadesPorPeriodoCalificaciones(parseInt(id, 10));
+            const {perCalId, asignaturaId} = req.params;
+            const actividades = await actividadService.actividadesPorPeriodoCalificaciones(parseInt(perCalId, 10), asignaturaId );
             res.json(actividades);
         }catch(error){
             res.status(500).json({error: error.message})

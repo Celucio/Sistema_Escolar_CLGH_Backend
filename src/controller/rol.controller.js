@@ -9,6 +9,19 @@ class RolController {
             res.status(500).json({ error: error.message })
         }
     }
+    async getById(req, res) {
+        try {
+            const { id } = req.params;
+            const rol = await rolService.getById(parseInt(id, 10));
+            if (rol) {
+                res.json(rol);
+            } else {
+                res.status(404).json({ error: 'No encontrada' });
+            }
+        } catch (error) {
+            res.status(500).json({ error: error.message })
+        }
+    }
     async create(req, res) {
         try {
             const { nombreRol, estado } = req.body;

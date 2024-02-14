@@ -9,10 +9,23 @@ class PeriodoCalController {
             res.status(500).json({ error: error.message })
         }
     }
+    async getById(req, res) {
+        try {
+            const { id } = req.params;
+            const perCal = await perCalService.getById(parseInt(id, 10));
+            if (perCal) {
+                res.json(perCal);
+            } else {
+                res.status(404).json({ error: 'Periodo no encontrado' });
+            }
+        } catch (error) {
+            res.status(500).json({ error: error.message })
+        }
+    }
     async create(req, res) {
         try {
-            const { nombrePeriodo } = req.body;
-            const perCal = await perCalService.create({ nombrePeriodo });
+            const { nombrePeriodo,estado } = req.body;
+            const perCal = await perCalService.create({ nombrePeriodo,estado });
             if (perCal) {
                 res.json(perCal);
             } else {
@@ -25,9 +38,10 @@ class PeriodoCalController {
     async update(req, res) {
         try {
             const { id } = req.params;
-            const { nombrePeriodo } = req.body;
+            const { nombrePeriodo,estado } = req.body;
             const perCal = await perCalService.update(parseInt(id, 10), {
-                nombrePeriodo
+                nombrePeriodo,
+		estado
             });
             res.json(perCal)
         } catch (error) {

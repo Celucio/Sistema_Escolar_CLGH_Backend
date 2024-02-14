@@ -15,7 +15,10 @@ router.post('/actividades', actividadController.create);
 //Actualizar por ID
 router.put('/actividades/:id', actividadController.update);
 
+//Obtener actividades por asignatura
+router.get('/actividades/asignatura/:asignaturaId', actividadController.actividadesPorAsignatura);
+
 //Obtener actividades por periodo de calificaciones
-router.get('/actividades/periodo/:id', actividadController.actividadesPorPeriodoCalificaciones);
+router.get('/actividades/periodo/:perCalId/asignatura/:asignaturaId', actividadController.actividadesPorPeriodoCalificaciones);
 
 module.exports = router;

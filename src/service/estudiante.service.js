@@ -1,4 +1,5 @@
 const { PrismaClient } = require('@prisma/client')
+const UsuarioService = require('./usuario.service');
 
 const prisma = new PrismaClient();
 
@@ -15,11 +16,13 @@ class EstudianteService {
             throw new Error(`No se pudieron obtener todos los estudiantes: ${error.message}`);
         }
     }
-    async getStudentByCi(cedula) {
+    async getStudentById(id) {
         try {
             const estudiante = await prisma.persona.findMany({
-                where: { cedula,
-                tipoPersona: 'E' }
+                where: {
+                    id,
+                    tipoPersona: 'E'
+                }
             });
             return estudiante;
         } catch (error) {
@@ -28,32 +31,54 @@ class EstudianteService {
     }
     async createStudent({ nombre, apellido, cedula, fechaNacimiento, direccion, correo, celular, tipoPersona }) {
         try {
-        const fechaNacimientoDate = new Date(fechaNacimiento);
-        if (isNaN(fechaNacimientoDate.getTime())) {
-            throw new Error('Fecha de nacimiento no válida.');
-        }
-        const fechaNacimientoISO = fechaNacimientoDate.toISOString();
-            const es = await prisma.persona.create({
+            // Verificar que no exista previamente
+            const studentExists = await prisma.persona.findUnique({
+                where: {
+                    cedula
+                }
+            });
+
+            if (studentExists) {
+                throw new Error("La cédula ya está registrada");
+            }
+
+            // Validar la fecha de nacimiento
+            const fechaNacimientoDate = new Date(fechaNacimiento);
+            if (isNaN(fechaNacimientoDate.getTime())) {
+                throw new Error('Fecha de nacimiento no válida.');
+            }
+
+            // Crear el estudiante
+            const fechaNacimientoISO = fechaNacimientoDate.toISOString();
+            const nuevoEstudiante = await prisma.persona.create({
                 data: {
                     nombre,
                     apellido,
                     cedula,
-                    fechaNacimiento:fechaNacimientoISO,
+                    fechaNacimiento: fechaNacimientoISO,
                     direccion,
                     correo,
                     celular,
                     tipoPersona
                 }
             });
-            return es;
+
+            await UsuarioService.registrarUsuario({
+                cedula,
+                personaId: nuevoEstudiante.id
+            });
+
+            return nuevoEstudiante;
+
         } catch (error) {
-            throw new Error(`No se puede agregar un estudiante: ${error.message}`)
+            // Mejorar el mensaje de error
+            throw new Error(`No se puede agregar un estudiante. ${error.message}`);
         }
     }
-    async updateStudent(id,{ nombre, apellido, direccion, correo, celular }) {
+    async updateStudent(id, { nombre, apellido, direccion, correo, celular }) {
         try {
             const es = await prisma.persona.update({
-                where:{id},
+                where: { id },
                 data: {
                     nombre,
                     apellido,
@@ -68,6 +93,22 @@ class EstudianteService {
         }
 
     }
+    async estudianteDisponible() {
+        try {
+            const estudiantes = await prisma.persona.findMany({
+                where: {
+                    tipoPersona: 'E',
+                    matricula: {
+                        none: {}
+                    }
+                }
+            });
+            return estudiantes;
+        } catch (error) {
+            throw new Error(`No se pudieron obtener todos los estudiantes: ${error.message}`);
+        }
+    }
+
 }
 
 module.exports = new EstudianteService();

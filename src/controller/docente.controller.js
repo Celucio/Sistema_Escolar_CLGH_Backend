@@ -22,6 +22,19 @@ class DocenteController {
             res.status(500).json({ error: error.message });
         }
     }
+    async getTeacherById(req, res) {
+        try {
+            const { id } = req.params;
+            const docente = await docenteService.getTeacherById(parseInt(id,10));
+            if (docente) {
+                res.json(docente);
+            } else {
+                res.status(404).json({ error: 'Estudiante no encontrada' });
+            }
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
     async createTeacher(req, res) {
         try {
             const { nombre, apellido, cedula, fechaNacimiento, direccion, correo, celular, tipoPersona } = req.body;
@@ -50,6 +63,14 @@ class DocenteController {
         }catch(error){
           res.status(500).json({error: error.message})
         }
-      }
+    }
+    async docenteDisponible(req,res){
+        try{
+            const docenteDisponible = await docenteService.docenteDisponible();
+            res.json(docenteDisponible);
+        }catch(error){
+            res.status(500).json({ error: error.message })
+        }
+    }
 }
 module.exports = new DocenteController();

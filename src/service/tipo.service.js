@@ -11,6 +11,18 @@ class TipoService{
             throw new Error(`No se pudieron obtener todos: ${error.message}`);
         }
     }
+    getById(id){
+        try{
+            const tipo = prisma.tipoActividad.findUnique({
+                where:{
+                    id:parseInt(id,10)
+                }
+            });
+            return tipo;
+        }catch(error){
+            throw new Error(`No se pudo encontrar el periodo: ${error.message}`)
+        }
+    }
     async create({nombreActividad}){
         try{
             const tipo = await prisma.tipoActividad.create({

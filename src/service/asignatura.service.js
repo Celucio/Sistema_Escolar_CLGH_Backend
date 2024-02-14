@@ -5,7 +5,15 @@ const prisma = new PrismaClient();
 class AsignaturaService {
     async getAllAsignatures() {
         try {
-            const asignaturas = await prisma.asignatura.findMany();
+            const asignaturas = await prisma.asignatura.findMany({
+		include:{
+                    grado:{
+                        select:{
+                            nombreGrado: true
+                        }
+                    }
+                }
+	});
             return asignaturas;
         } catch (error) {
             throw new Error(`No se pudieron obtener todas las asignaturas: ${error.message}`);
@@ -13,7 +21,7 @@ class AsignaturaService {
     }
     async getAsignatureById(id) {
         try {
-            const asignatura = await prisma.asignatura.findMany({
+            const asignatura = await prisma.asignatura.findUnique({
                 where: { id },
                 include:{
                     grado:{
@@ -57,6 +65,23 @@ class AsignaturaService {
             return es;
         } catch (error) {
             throw new Error(`No se puede actualizar la asignatura: ${error.message}`)
+        }
+    }
+    async asignaturaPorGrado(id) {
+        try {
+            const asignaturas = await prisma.asignatura.findMany({
+                where: { idGrado: id },
+                include:{
+                    grado:{
+                        select:{
+                            nombreGrado: true
+                        }
+                    }
+                }
+            });
+            return asignaturas;
+        } catch (error) {
+            throw new Error(`No se pudo obtener la asignatura por ID: ${error.message}`);
         }
     }
 }

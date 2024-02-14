@@ -5,6 +5,9 @@ const router = express.Router();
 //Consultar todos los roles 
 router.get('/rol', rolController.getAll);
 
+//Consultar un rol por id
+router.get('/rol/:id', rolController.getById);
+
 //Crear un nuevo rol
 router.post('/rol', rolController.create);
 

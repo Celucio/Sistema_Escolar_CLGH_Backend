@@ -11,6 +11,16 @@ class RolService{
             throw new Error(`No se pudieron obtener todos los roles: ${error.message}`);
         }
     }
+    async getById(id) {
+        try {
+            const rol = await prisma.rol.findUnique({
+                where: { id }
+            });
+            return rol;
+        } catch (error) {
+            throw new Error(`No se pudo encontrar el rol: ${error.message}`);
+        }
+    }
     async create({nombreRol, estado}){
         try {
             const rol = await prisma.rol.create({

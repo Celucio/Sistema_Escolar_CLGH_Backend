@@ -7,6 +7,9 @@ const router = express.Router();
 //consultar todos los grados de la tabla
 router.get('/grado', gradoController.getAll);
 
+//consultar un grado por id
+router.get('/grado/:id', gradoController.getById);
+
 //Insertar nuevo grado
 router.post('/grado/', gradoController.create);
 

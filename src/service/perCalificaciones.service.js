@@ -11,11 +11,24 @@ class PeriodoCalService{
             throw new Error(`No se pudieron obtener todos: ${error.message}`);
         }
     }
-    async create({nombrePeriodo}){
+    async getById(id){
+        try{
+            const periodoCal = await prisma.periodoCalificaciones.findUnique({
+                where:{
+                    id
+                }
+            });
+            return periodoCal;
+        }catch(error){
+            throw new Error(`No se pudo obtener por ID: ${error.message}`);
+        }
+    }
+    async create({nombrePeriodo, estado}){
         try{
             const periodoCal = await prisma.periodoCalificaciones.create({
                 data:{
-                    nombrePeriodo
+                    nombrePeriodo,
+		    estado
                 }
             });
             return periodoCal;
@@ -23,14 +36,15 @@ class PeriodoCalService{
             throw new Error(`No se puede agregar: ${error.message}`)
         }
     }
-    async update(id, {nombrePeriodo}){
+    async update(id, {nombrePeriodo,estado}){
         try{
             const periodoCal = await prisma.periodoCalificaciones.update({
                 where:{
                     id
                 },
                 data:{
-                    nombrePeriodo
+                    nombrePeriodo,
+		    estado
                 }
             });
             return periodoCal;

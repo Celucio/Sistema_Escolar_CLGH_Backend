@@ -9,7 +9,19 @@ class PeriodoController {
             res.status(500).json({ error: error.message });
         }
     }
-
+    async getById(req, res) {
+        try {
+            const { id } = req.params;
+            const periodo = await periodoService.getById(parseInt(id, 10));
+            if (periodo) {
+                res.json(periodo);
+            } else {
+                res.status(404).json({ error: 'Periodo no encontrado' });
+            }
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
     async create(req, res) {
         try {
             const { anioLectivo, estado } = req.body;

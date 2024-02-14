@@ -5,12 +5,15 @@ const router = express.Router();
 
 
 //consultar todos los grados de la tabla
-router.get('/matriculas', matriculaController.getAll);
+router.get('/matricula', matriculaController.getAll);
+
+//Obtener matricula por id
+router.get('/matricula/:id', matriculaController.getById);
 
 //Insertar nuevo grado
 router.post('/matricula/', matriculaController.create);
 
-//Obtener matricula por id
-router.get('/matricula/:id', matriculaController.getById);
+//Actualizar grado
+router.put('/matricula/:id', matriculaController.update);
 
 module.exports = router;

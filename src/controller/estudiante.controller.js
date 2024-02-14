@@ -9,10 +9,10 @@ class EstudianteController {
       res.status(500).json({ error: error.message });
     }
   }
-  async getStudentByCi(req, res) {
+  async getStudentById(req, res) {
     try {
-      const { cedula } = req.params;
-      const estudiante = await estudianteService.getStudentByCi(cedula);
+      const { id } = req.params;
+      const estudiante = await estudianteService.getStudentById(parseInt(id, 10));
       if (estudiante) {
         res.json(estudiante);
       } else {
@@ -49,6 +49,14 @@ class EstudianteController {
       res.json(estudiante)
     }catch(error){
       res.status(500).json({error: error.message})
+    }
+  }
+  async estudianteDisponible(req,res){
+    try{
+      const estudianteDisponible = await estudianteService.estudianteDisponible();
+      res.json(estudianteDisponible);
+    }catch(error){
+      res.status(500).json({ error: error.message })
     }
   }
 }

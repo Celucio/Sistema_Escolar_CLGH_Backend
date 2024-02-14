@@ -5,7 +5,13 @@ const router = express.Router();
 
 
 //consultar todos los estudiantes de la tabla
-router.get('/docentes', docenteController.getAllTeachers);
+router.get('/docente', docenteController.getAllTeachers);
+
+//Docentes disponibles
+router.get('/docentes/disponibles',docenteController.docenteDisponible);
+
+//Obtener docentes por id
+router.get('/docente/:id', docenteController.getTeacherById);
 
 //Obtener docentes por cedula
 router.get('/docente/:ci', docenteController.getTeacherByCi);
@@ -15,5 +21,8 @@ router.post('/docente/', docenteController.createTeacher);
 
 //Actualizar el docente por id
 router.put('/docente/:id',docenteController.updateTeacher);
+
+
+
 
 module.exports = router;

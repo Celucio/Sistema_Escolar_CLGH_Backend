@@ -10,18 +10,18 @@ class MatriculaService {
                 include: {
                     persona: {
                         select: {
-                            nombre:true,
+                            nombre: true,
                             apellido: true
                         }
                     },
                     periodo: {
                         select: {
-                            anioLectivo:true
+                            anioLectivo: true
                         }
                     },
-                    grado:{
-                        select:{
-                            nombreGrado:true
+                    grado: {
+                        select: {
+                            nombreGrado: true
                         }
                     }
                 }
@@ -31,25 +31,25 @@ class MatriculaService {
             throw new Error(`No se pudieron obtener todas las matriculas: ${error.message}`);
         }
     }
-    async getById(id){
+    async getById(id) {
         try {
             const matricula = await prisma.matricula.findUnique({
                 where: { id },
                 include: {
                     persona: {
                         select: {
-                            nombre:true,
+                            nombre: true,
                             apellido: true
                         }
                     },
                     periodo: {
                         select: {
-                            anioLectivo:true
+                            anioLectivo: true
                         }
                     },
-                    grado:{
-                        select:{
-                            nombreGrado:true
+                    grado: {
+                        select: {
+                            nombreGrado: true
                         }
                     }
                 }
@@ -62,28 +62,57 @@ class MatriculaService {
 
     async create({ estado, idPersona, idPeriodo, idGrado }) {
 
-        // Validar que la persona sea estudiante
-        const persona = await prisma.persona.findUnique({ 
-          where: {
-            id: idPersona
-          }
+        const matriculaExistente = await prisma.matricula.findFirst({
+            where: {
+                AND: [
+                    { idPersona },
+                    { estado: 'A' }
+                ]
+            }
         });
-      
-        if (!persona || persona.tipoPersona !== 'E') {
-          throw new Error('Sólo se pueden matricular estudiantes'); 
+
+        if (matriculaExistente) {
+            throw new Error('El estudiante ya está matriculado');
         }
-      
-        // Si es estudiante, crear la matrícula 
-        return prisma.matricula.create({
-          data: {
-            estado,
-            idPersona,
-            idPeriodo,
-            idGrado  
-          }
+
+        const persona = await prisma.persona.findUnique({
+            where: {
+                id: idPersona
+            }
         });
-      
-      }
+
+        if (!persona || persona.tipoPersona !== 'E') {
+            throw new Error('Sólo se pueden matricular estudiantes');
+        }
+        return prisma.matricula.create({
+            data: {
+                estado,
+                idPersona,
+                idPeriodo,
+                idGrado
+            }
+        });
+
+    }
+
+    async update(id, { estado, idPersona, idPeriodo, idGrado }) {
+        try {
+            const matricula = await prisma.matricula.update({
+                where: { id },
+                data: {
+                    estado,
+                    idPersona,
+                    idPeriodo,
+                    idGrado
+                }
+            });
+            return matricula;
+        } catch (error) {
+            throw new Error(`No se puede actualizar una matricula: ${error.message}`);
+        }
+    }
+    
+
 }
 
 module.exports = new MatriculaService();

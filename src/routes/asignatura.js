@@ -16,4 +16,7 @@ router.post('/asignatura/', asignaturaController.createAsignature);
 //Actualizar asignatura
 router.put('/asignatura/:id', asignaturaController.update);
 
+//Obtener asignaturas por grado
+router.get('/asignatura/grado/:id', asignaturaController.asignaturaPorGrado);
+
 module.exports = router;

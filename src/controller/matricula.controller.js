@@ -36,5 +36,19 @@ class MatriculaController {
             res.status(500).json({ error: error.message })
         }
     }
+    async update(req, res) {
+        try {
+            const { id } = req.params;
+            const { estado, idPersona, idPeriodo, idGrado } = req.body;
+            const matricula = await matriculaService.update(parseInt(id, 10), { estado, idPersona, idPeriodo, idGrado });
+            if (matricula) {
+                res.json(matricula);
+            } else {
+                res.status(404).json({ error: 'Matricula no encontrada' });
+            }
+        } catch (error) {
+            res.status(500).json({ error: error.message })
+        }
+    }
 }
 module.exports = new MatriculaController();

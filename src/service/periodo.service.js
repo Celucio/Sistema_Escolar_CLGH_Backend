@@ -12,7 +12,18 @@ class PeriodoService {
             throw new Error(`No se pudieron obtener todos los periodos: ${error.message}`);
         }
     }
-  
+    async getById(id) {
+        try {
+            const periodo = await prisma.periodo.findUnique({
+                where: {
+                    id
+                }
+            });
+            return periodo;
+        } catch (error) {
+            throw new Error(`No se pudo obtener el periodo: ${error.message}`);
+        }
+    }
     async create({ anioLectivo, estado}) {
         try {
             const es = await prisma.periodo.create({
@@ -26,7 +37,7 @@ class PeriodoService {
             throw new Error(`No se puede agregar un periodo: ${error.message}`)
         }
     }
-    async update(id, {anioLectivo, estado}) {
+   async update(id, {anioLectivo, estado}) {
         try {
             const es = await prisma.periodo.update({
                 where: {
