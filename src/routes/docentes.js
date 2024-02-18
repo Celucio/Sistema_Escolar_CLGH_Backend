@@ -1,8 +1,6 @@
 const docenteController = require('../controller/docente.controller');
-
 const express = require('express');
 const router = express.Router();
-
 
 //consultar todos los estudiantes de la tabla
 router.get('/docente', docenteController.getAllTeachers);

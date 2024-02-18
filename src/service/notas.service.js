@@ -251,21 +251,67 @@ class NotaService {
             throw new Error(`No se pudieron obtener todas las notas: ${error.message}`);
         }
     }
-    async obtenerNotasEstudiante(idEstudiante, idAsignatura) {
+    async obtenerActividadesNotas(actividadId, asignaturaId){
         try {
-            const notas = await prisma.$queryRaw`
-            SELECT aen.id, ae.titulo, ae.detalleActividad, aen.valor_nota
-            FROM Act_Est_Notas aen
-            JOIN ActividadesEducativas ae ON aen.actId = ae.id
-            WHERE aen.personaId = ${parseInt(idEstudiante)} AND ae.asignaturaId = ${parseInt(idAsignatura)};
-            `
-            if (!notas) {
-                throw new Error(`No se encontraron notas para el estudiante con ID ${idEstudiante} y la asignatura con ID ${idAsignatura}`);
-            }
-
-            return notas;
+            const filtro = {
+                include: {
+                    persona: true,
+                    actividades: {
+                        include: {
+                            asignatura: true
+                        }
+                    }
+                },
+                where: {}
+            };
+            // Agregar condiciones si se proporcionan los parámetros
+            if (actividadId) filtro.where.actId = parseInt(actividadId);
+            if (asignaturaId) filtro.where = {
+                ...filtro.where,
+                'actividades': {
+                    'asignatura': {
+                        'id': parseInt(asignaturaId)
+                    }
+                }
+            };
+            const notas = await prisma.act_Est_Notas.findMany(filtro);
+            return notas.map(nota => {
+                return {
+                    nombre: nota.persona.nombre,
+                    apellido: nota.persona.apellido,
+                    tituloActividad: nota.actividades.titulo,
+                    fechaInicio: nota.actividades.fechaInicio,
+                    nota: nota.valor_nota,
+                    idNota: nota.id
+                };
+            });
         } catch (error) {
+            console.error('Error al obtener todas las notas:', error.message);
             throw new Error(`No se pudieron obtener todas las notas: ${error.message}`);
+        }
+    }
+    async asignarNota(id, { valor_nota }) {
+        try {
+            const notaActualizada = await prisma.act_Est_Notas.update({
+                where: {
+                    id
+                },
+                data: {
+                    valor_nota: parseFloat(valor_nota, 10)
+                },
+                select: {
+                    valor_nota: true,
+                    persona: {
+                        select: {
+                            nombre: true,
+                            apellido: true
+                        }
+                    }
+                }
+            })
+            return notaActualizada
+        } catch (error) {
+            throw new Error(`No se pudo actualizar la nota: ${error.message}`)
         }
     }
 

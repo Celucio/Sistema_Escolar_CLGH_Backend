@@ -32,7 +32,7 @@ class UsuarioService {
 
     } catch (error) {
       // Mejorar el mensaje de error
-      throw new Error(`2. No se puede agregar un usuario. ${error.message}`);
+      throw new Error(`No se puede agregar un usuario. ${error.message}`);
     }
   }
 }
