@@ -18,7 +18,6 @@ const obtenerDatosUsuario = async (id) => {
   return usuario;
 };
 
-
 async function login(cedula, contrasena) {
   try {
     const usuario = await prisma.usuario.findFirst({
@@ -43,7 +42,7 @@ async function login(cedula, contrasena) {
       }
 
       if (primerInicioSesion) {
-        return { mensaje: 'Cambio de contraseña requerido', primerInicioSesion: true };
+        return { mensaje: 'Cambio de contraseña requerido 2', primerInicioSesion: true, cedula };
       }
 
       const detallesPersona = await obtenerDatosUsuario(persona.id);
@@ -117,8 +116,39 @@ async function cambiarContrasena(cedula, nuevaContrasena) {
   }
 }
 
+async function cambiarContrasenaOlvido(cedula, nuevaContrasena) {
+  try {
+    const usuario = await prisma.usuario.findFirst({
+      where: { persona: { cedula } },
+    });
+
+    if (!usuario) {
+      throw new Error('Usuario no encontrado');
+    }
+
+    const { id } = usuario;
+
+    const hashedContrasena = await bcrypt.hash(nuevaContrasena, saltRounds);
+
+    await prisma.usuario.update({
+      where: { id },
+      data: {
+        contrasena: hashedContrasena,
+      },
+    });
+
+    console.log('Contraseña actualizada correctamente en la base de datos');
+    console.log('Contraseña hasheada en la base de datos:', hashedContrasena);
+    return { mensaje: 'Contraseña cambiada con éxito' };
+  } catch (error) {
+    console.error('Error en el servicio de cambio de contraseña:', error);
+    throw new Error('Error al actualizar la contraseña en la base de datos');
+  }
+}
+
 module.exports = {
   login,
   primerInicioSesion,
   cambiarContrasena,
+  cambiarContrasenaOlvido
 };
