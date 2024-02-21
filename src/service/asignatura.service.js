@@ -41,7 +41,6 @@ class AsignaturaService {
                     idGrado: parseInt(idGrado, 10)
                 }
             });
-    
             return nuevaAsignatura;
         } catch (error) {
             throw new Error(`No se puede agregar una asignatura: ${error.message}`);
@@ -56,11 +55,9 @@ class AsignaturaService {
                     idGrado
                 }
             });
-
             if (asignaturaExistente) {
                 throw new Error(`La asignatura '${nombreMateria}' ya existe en el grado con ID '${idGrado}'.`);
             }
-
             // Si no hay asignatura existente con el mismo nombre en el mismo grado, la validación es exitosa.
             return true;
         } catch (error) {
@@ -68,7 +65,6 @@ class AsignaturaService {
         }
     }
 
-    
     async update(id, {nombreMateria, estado, idGrado}) {
         try {
             const es = await prisma.asignatura.update({
@@ -86,6 +82,7 @@ class AsignaturaService {
             throw new Error(`No se puede actualizar la asignatura: ${error.message}`)
         }
     }
+
     async getAllAsignaturasWithGrado() {
         try {
             const asignaturas = await prisma.asignatura.findMany({
@@ -126,9 +123,6 @@ class AsignaturaService {
             throw new Error(`No se pudo obtener la asignatura por ID: ${error.message}`);
         }
     }
-
-    
-
 }
 
 module.exports = new AsignaturaService();

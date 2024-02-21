@@ -58,22 +58,20 @@ class DocenteService {
     }
     async createTeacher({ nombre, apellido, cedula, fechaNacimiento, direccion, correo, celular, tipoPersona }) {
         try {
-            // Verificar si ya existe un estudiante con la misma cédula
+            // Verificar si ya existe un docente con la misma cédula
             const existingTeacher = await this.getTeacherByCi(cedula);
-    
             if (existingTeacher.length > 0) {
                 throw new Error('Ya existe un docente con esta cédula.');
             }
-
-            // Verificar si ya existe un estudiante con el mismo correo electrónico
+            // Verificar si ya existe un docente con el mismo correo electrónico
             const existingTeacherByCorreo = await this.getTeacherByCelular(correo);
             if (existingTeacherByCorreo.length > 0) {
                 throw new Error('Ya existe un docente con este correo electrónico.');
             }  
-            // Verificar si ya existe un estudiante con el mismo número de teléfono
+            // Verificar si ya existe un docente con el mismo número de teléfono
             const existingTeacherByCelular = await this.getTeacherByCelular(celular);
             if (existingTeacherByCelular.length > 0) {
-            throw new Error('Ya existe un estudiante con este número de teléfono.');
+            throw new Error('Ya existe un docente con este número de teléfono.');
             }    
             const fechaNacimientoDate = new Date(fechaNacimiento);
             if (isNaN(fechaNacimientoDate.getTime())) {

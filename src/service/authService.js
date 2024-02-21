@@ -42,7 +42,7 @@ async function login(cedula, contrasena) {
       }
 
       if (primerInicioSesion) {
-        return { mensaje: 'Cambio de contraseña requerido 2', primerInicioSesion: true, cedula };
+        return { mensaje: 'Cambio de contraseña requerido ', primerInicioSesion: true, cedula };
       }
 
       const detallesPersona = await obtenerDatosUsuario(persona.id);

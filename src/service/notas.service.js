@@ -237,9 +237,10 @@ class NotaService {
     async obtenerNotasEstudiante(idEstudiante, idAsignatura) {
         try {
             const notas = await prisma.$queryRaw`
-            SELECT aen.id, ae.titulo, ae.detalleActividad, aen.valor_nota
+            SELECT aen.id, ae.titulo, ae.detalleActividad, aen.valor_nota, p.nombrePeriodo
             FROM Act_Est_Notas aen
             JOIN ActividadesEducativas ae ON aen.actId = ae.id
+            JOIN PeriodoCalificaciones p ON ae.perCalId = p.id
             WHERE aen.personaId = ${parseInt(idEstudiante)} AND ae.asignaturaId = ${parseInt(idAsignatura)};
             `
             if (!notas) {

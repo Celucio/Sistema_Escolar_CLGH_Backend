@@ -35,8 +35,8 @@ class AsignaturaController {
             res.status(500).json({ error: error.message })
         }
     }
-  
-    
+
+
     async update(req, res) {
         try {
             const { id } = req.params;
@@ -91,9 +91,9 @@ class AsignaturaController {
     }
 
 
-   
-  
 
-    
+
+
+
 }
 module.exports = new AsignaturaController();
